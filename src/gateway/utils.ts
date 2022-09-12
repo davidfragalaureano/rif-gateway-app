@@ -1,9 +1,9 @@
 import { BigNumberish, ethers } from 'ethers'
 import IdentityFactoryJson from './ABIs/UserIdentityFactory.json'
-import DummierLendingServiceJson from './ABIs/DummierLendingService.json'
+import IdentityLendingServiceJson from './ABIs/IdentityLendingService.json'
 
 const IDENTITY_FACTORY_ADDRESS = process.env.IDENTITY_FACTORY_ADDRESS || ''
-const DUMMIER_SERVICE_PROVIDER_ADDRESS = process.env.DUMMIER_SERVICE_PROVIDER_ADDRESS || ''
+const IDENTITY_SERVICE_PROVIDER_ADDRESS = process.env.IDENTITY_SERVICE_PROVIDER_ADDRESS || ''
 
 export async function authorizeServiceProvider (
   signer: ethers.Signer,
@@ -14,18 +14,18 @@ export async function authorizeServiceProvider (
   await (await identityFactory.authorize(serviceProviderAddress, isAuthorized)).wait()
 }
 
-export async function lend (signer: ethers.Signer, amount: BigNumberish) {
-  const lsp = getDummierLendingService(signer)
-  await (await lsp.lend({ value: amount })).wait()
+export async function lend (signer: ethers.Signer, amount: BigNumberish): Promise<ethers.ContractTransaction> {
+  const lsp = getIdentityLendingService(signer)
+  return await lsp.lend({ value: amount })
 }
 
-export async function withdraw (signer: ethers.Signer) {
-  const lsp = getDummierLendingService(signer)
-  await (await lsp.withdraw()).wait()
+export async function withdraw (signer: ethers.Signer): Promise<ethers.ContractTransaction> {
+  const lsp = getIdentityLendingService(signer)
+  return await lsp.withdraw()
 }
 
-export async function getLendedBalance (signer: ethers.Signer) {
-  const lsp = getDummierLendingService(signer)
+export async function getLendedBalance (signer: ethers.Signer): Promise<BigNumberish> {
+  const lsp = getIdentityLendingService(signer)
   return await lsp.getBalance()
 }
 
@@ -34,6 +34,6 @@ const getUserIdentityFactory = (signer: ethers.Signer): ethers.Contract => {
   return new ethers.Contract(IDENTITY_FACTORY_ADDRESS, IdentityFactoryJson.abi, signer)
 }
 
-const getDummierLendingService = (signer: ethers.Signer): ethers.Contract => {
-  return new ethers.Contract(DUMMIER_SERVICE_PROVIDER_ADDRESS, DummierLendingServiceJson.abi, signer)
+const getIdentityLendingService = (signer: ethers.Signer): ethers.Contract => {
+  return new ethers.Contract(IDENTITY_SERVICE_PROVIDER_ADDRESS, IdentityLendingServiceJson.abi, signer)
 }
