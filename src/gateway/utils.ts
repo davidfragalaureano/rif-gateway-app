@@ -14,12 +14,12 @@ export async function authorizeServiceProvider (
   await (await identityFactory.authorize(serviceProviderAddress, isAuthorized)).wait()
 }
 
-export async function lend (signer: ethers.Signer, amount: BigNumberish, listingId: BigNumberish) {
+export async function lend (signer: ethers.Signer, amount: BigNumberish) {
   const lsp = getDummierLendingService(signer)
   await (await lsp.lend({ value: amount })).wait()
 }
 
-export async function withdraw (signer: ethers.Signer, amount: BigNumberish, listingId: BigNumberish) {
+export async function withdraw (signer: ethers.Signer) {
   const lsp = getDummierLendingService(signer)
   await (await lsp.withdraw()).wait()
 }
