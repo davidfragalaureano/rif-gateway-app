@@ -1,17 +1,12 @@
 
-import React, { useState, useEffect } from 'react'
-import { constants } from 'ethers'
+import React, { useState } from 'react'
 
 import { MainLink } from '../shared/StyledComponents'
-import { Container, Grid, Typography } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
 
-import useConnector from '../connect/useConnector'
-
-import { fetchTokenBalance, formatBigNumber, ITokenBalance, shortAddress } from '../shared/utils'
-import { ENetwork, SupportedNetworks } from '../connect/rLogin'
+import { IService } from '../shared/utils'
 import { Link as RouterLink } from 'react-router-dom'
-import { getTokenLogo, getTokenSymbol } from '../shared/tokenMetadata'
 
 const Row = withStyles({
   root: {
@@ -26,8 +21,8 @@ const Row = withStyles({
 })(Container)
 
 const Services = () => {
-  const [services, setServices] = useState<any[]>([])
-  const [activeServices, setActiveServices] = useState<any[]>([])
+  const [services, setServices] = useState<IService[]>([])
+  const [activeServices, setActiveServices] = useState<IService[]>([])
 
   return (
     <>
@@ -37,9 +32,9 @@ const Services = () => {
       {activeServices.map((service, index) => (
         <ServiceItem
           key={`active-service-item-row${index}`}
-          balance={formatBigNumber(service.balance, service.decimals)}
-          tokenSymbol={getTokenSymbol(service.address, network ?? ENetwork.NotSupported, service.symbol)}
-          tokenLogo={getTokenLogo(service.address, network ?? ENetwork.NotSupported)}
+          serviceProviderName={service.serviceProviderName}
+          listingAddress={service.listingAddress}
+          listingName={service.listingName}
         />
       ))}
 
@@ -49,9 +44,9 @@ const Services = () => {
       {services.map((service, index) => (
         <ServiceItem
           key={`service-item-row${index}`}
-          balance={formatBigNumber(service.balance, service.decimals)}
-          tokenSymbol={getTokenSymbol(service.address, network ?? ENetwork.NotSupported, service.symbol)}
-          tokenLogo={getTokenLogo(service.address, network ?? ENetwork.NotSupported)}
+          serviceProviderName={service.serviceProviderName}
+          listingAddress={service.listingAddress}
+          listingName={service.listingName}
         />
       ))}
     </>
@@ -66,16 +61,14 @@ interface ServiceItemProps {
   listingAddress: string
 }
 
-const ServiceItem: React.FC<ServiceItemProps> = ({ balance, tokenSymbol, tokenLogo }) => {
+const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress }) => {
   return (
     <Row>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <div style={{ display: 'flex', width: 50, height: 50, justifyContent: 'center' }}>
-            <img style={{ height: 50 }} src={tokenLogo} alt={tokenSymbol} />
-          </div>
-          <Typography variant="h3" component="span">{balance} {tokenSymbol}</Typography>
-        </div>
-        <MainLink component={RouterLink} to={`/wsb/send?token=${tokenSymbol}`}>send</MainLink>
+      <div style={{ display: 'flex', gap: '15px' }}>
+        <Typography variant="h3" component="span">{listingName}</Typography>
+        <Typography variant="h3" component="span">{serviceProviderName}</Typography>
+      </div>
+      <MainLink component={RouterLink} to={'/wsb/send?token='}>Consume</MainLink>
     </Row>
   )
 }
