@@ -1,8 +1,8 @@
-import { ENetwork } from '../connect/rLogin'
+import { ENetwork } from '../../connect/rLogin'
 import { BigNumber as EthBigNumber } from '@ethersproject/bignumber'
 import BigNumber from 'bignumber.js'
 import { Signer, Contract } from 'ethers'
-import erc20Abi from '../send/erc20abi.json'
+import erc20Abi from '../../send/erc20abi.json'
 
 export const NetworkExplorer = {
   [ENetwork.NotSupported]: null,

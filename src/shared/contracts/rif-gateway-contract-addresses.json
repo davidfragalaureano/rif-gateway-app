@@ -1,0 +1,9 @@
+{
+    "rif-gateway": "0x",
+    "mocks": {
+        "acme": "0x",
+        "dummyLendingService": "0x"
+    },
+    "providers": "0x",
+    "feeManager": "0x"
+}

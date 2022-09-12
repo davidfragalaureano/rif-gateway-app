@@ -4,7 +4,7 @@ import shallow from 'zustand/shallow'
 import { ENetwork } from './connect/rLogin'
 import useConnector from './connect/useConnector'
 import { Column, MainLink, Row } from './shared/StyledComponents'
-import { NetworkExplorer, shortAddress } from './shared/utils'
+import { NetworkExplorer, shortAddress } from './shared/utils/utils'
 
 const NETWORK_DESCRIPTION = {
   [ENetwork.NotSupported]: 'Not supported',
