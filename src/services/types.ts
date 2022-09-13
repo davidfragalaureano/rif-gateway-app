@@ -4,7 +4,8 @@ export type RIFService = {
     listingAddress: string
     balance: number,
     apy: number,
-    id: number
+    id: number,
+    used: boolean
 }
 
 export type ServiceItemProps = {
@@ -15,5 +16,6 @@ export type ServiceItemProps = {
     balance: number,
     apy: number,
     id: number,
+    used: boolean,
     onClickHandler: Function
 }

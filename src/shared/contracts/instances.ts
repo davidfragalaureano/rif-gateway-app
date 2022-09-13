@@ -16,5 +16,5 @@ export function getLendingService (signerOrProvider: Signer | Provider, address:
 }
 
 export function getUserIdentityFactory (signerOrProvider: Signer | Provider) {
-    return getContractInstance<UserIdentityFactory>(process.env.REACT_APP_IDENTITY_FACTORY || '', UserIdentityFactoryABI.abi, signerOrProvider)
+  return getContractInstance<UserIdentityFactory>(process.env.REACT_APP_IDENTITY_FACTORY || '', UserIdentityFactoryABI.abi, signerOrProvider)
 }
