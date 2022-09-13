@@ -1,6 +1,6 @@
 import { BigNumberish, ethers } from 'ethers'
-import IdentityFactoryJson from './ABIs/UserIdentityFactory.json'
-import IdentityLendingServiceJson from './ABIs/IdentityLendingService.json'
+import IdentityFactoryJson from '../shared/contracts/ABIs/UserIdentityFactory.json'
+import IdentityLendingServiceJson from '../shared/contracts//ABIs/IdentityLendingService.json'
 
 const IDENTITY_FACTORY_ADDRESS = process.env.IDENTITY_FACTORY_ADDRESS || ''
 const IDENTITY_SERVICE_PROVIDER_ADDRESS = process.env.IDENTITY_SERVICE_PROVIDER_ADDRESS || ''
