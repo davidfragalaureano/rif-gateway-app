@@ -9,7 +9,8 @@ import { NetworkExplorer, shortAddress } from './shared/utils/utils'
 const NETWORK_DESCRIPTION = {
   [ENetwork.NotSupported]: 'Not supported',
   [ENetwork.RSKMainnet]: 'RSK Mainnet',
-  [ENetwork.RSKTestnet]: 'RSK Testnet'
+  [ENetwork.RSKTestnet]: 'RSK Testnet',
+  [ENetwork.Ganache]: 'Ganache'
 }
 
 const Wallet = () => {

@@ -7,7 +7,8 @@ import erc20Abi from '../../send/erc20abi.json'
 export const NetworkExplorer = {
   [ENetwork.NotSupported]: null,
   [ENetwork.RSKMainnet]: 'https://explorer.rsk.co/',
-  [ENetwork.RSKTestnet]: 'https://explorer.testnet.rsk.co/'
+  [ENetwork.RSKTestnet]: 'https://explorer.testnet.rsk.co/',
+  [ENetwork.Ganache]: 'http://127.0.0.1:8545/'
 }
 
 export function shortAddress (address?: string): string {
