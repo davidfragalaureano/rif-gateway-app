@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { MainLink } from '../shared/StyledComponents'
 import { Container, Typography } from '@mui/material'
@@ -8,7 +8,6 @@ import { Link as RouterLink } from 'react-router-dom'
 import { RIFService, ServiceItemProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
-import { ContractInstances } from '../shared/contracts'
 
 const Row = withStyles({
   root: {
@@ -21,58 +20,62 @@ const Row = withStyles({
   }
 })(Container)
 
+const mockActiveServices = [
+  {
+    serviceProviderName: 'Tropykus',
+    listingAddress: '0xasdf',
+    listingName: 'Lending Service',
+    balance: 500,
+    apy: 5.4
+  },
+  {
+    serviceProviderName: 'Growr',
+    listingAddress: '0xasdf',
+    listingName: 'Borrowing Service',
+    balance: 300,
+    apy: 3.5
+  }
+]
+
+const mockServices = [
+  {
+    serviceProviderName: 'Tropykus',
+    listingAddress: '0xasdf',
+    listingName: 'Borrowing Service',
+    balance: 0,
+    apy: 0
+  },
+  {
+    serviceProviderName: 'Growr',
+    listingAddress: '0xasdf',
+    listingName: 'Lending Service',
+    balance: 0,
+    apy: 0
+  }
+]
+
 const Services = () => {
-  let [services, setServices] = useState<RIFService[]>([])
-  let [activeServices, setActiveServices] = useState<RIFService[]>([])
+  // eslint-disable-next-line no-unused-vars
+  const [services, setServices] = useState<RIFService[]>(mockServices)
+  // eslint-disable-next-line no-unused-vars
+  const [activeServices, setActiveServices] = useState<RIFService[]>(mockActiveServices)
+  // eslint-disable-next-line no-unused-vars
   const [signer, network, account] = useConnector(state => [state.signer, state.network, state.account], shallow)
 
-  activeServices = [
-    {
-      serviceProviderName: 'Tropykus',
-      listingAddress: '0xasdf',
-      listingName: 'Lending Service',
-      balance: 500,
-      apy: 5.4
-    },
-    {
-      serviceProviderName: 'Growr',
-      listingAddress: '0xasdf',
-      listingName: 'Borrowing Service',
-      balance: 300,
-      apy: 3.5
-    }
-  ]
-
-  services = [
-    {
-      serviceProviderName: 'Tropykus',
-      listingAddress: '0xasdf',
-      listingName: 'Borrowing Service',
-      balance: 0,
-      apy: 0
-    },
-    {
-      serviceProviderName: 'Growr',
-      listingAddress: '0xasdf',
-      listingName: 'Lending Service',
-      balance: 0,
-      apy: 0
-    }
-  ]
-
-  const fetchServices = async () => {
-    if (!signer) {
-      throw new Error('Empty signer')
-    }
-
-    const { Providers } = ContractInstances(signer)
-    const servicesAddresses = await Providers.getServices()
-    console.log(servicesAddresses)
-  }
-
-  useEffect(() => {
-     fetchServices()
-  }, [])
+  // useEffect(() => {
+  //   const fetchServices = async () => {
+  //     if (!signer || !account) return
+  //
+  //     const { Providers } = ContractInstances(signer)
+  //     try {
+  //       const servicesAddresses = await Providers.getServices()
+  //       console.log(servicesAddresses)
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  //   fetchServices()
+  // }, [signer, account])
 
   return (
     <>
@@ -115,11 +118,9 @@ const Services = () => {
 
 export default Services
 
-
-
 const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress, available, balance, apy }) => {
   return (
-    <Row style={{ border: 'solid white', padding: '15px', background: 'white', borderRadius: '15px' }}>
+    <Row style={{ padding: '15px', background: 'white', borderRadius: '15px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
         <Typography style={{ color: 'black' }} variant="h3" component="span">{listingName}</Typography>
         <Typography style={{ color: 'black' }} variant="body1" component="span">{serviceProviderName}</Typography>

@@ -1,7 +1,7 @@
 import { getContractInstance } from './utils'
 import ProviderABI from '../../shared/contracts/ABIs/Providers.json'
 import { Provider } from '@ethersproject/abstract-provider'
-import { Contract, Signer } from 'ethers'
+import { Signer } from 'ethers'
 import { Providers } from './typechain-types/contracts/services'
 
 export type RIFContracts = {
@@ -9,5 +9,5 @@ export type RIFContracts = {
 }
 
 export default (signerOrProvider: Signer | Provider): RIFContracts => ({
-    Providers: getContractInstance<Providers>('Providers', ProviderABI.abi, signerOrProvider)
-}) 
+  Providers: getContractInstance<Providers>('Providers', ProviderABI.abi, signerOrProvider)
+})
