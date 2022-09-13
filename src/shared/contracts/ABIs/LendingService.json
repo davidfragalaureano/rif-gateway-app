@@ -213,18 +213,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "duration",
-          "type": "uint256"
-        },
-        {
-          "internalType": "enum LendingService.PayBackOption",
-          "name": "payBackOption",
-          "type": "uint8"
-        }
-      ],
+      "inputs": [],
       "name": "lend",
       "outputs": [],
       "stateMutability": "payable",

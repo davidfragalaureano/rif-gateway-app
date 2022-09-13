@@ -1,6 +1,4 @@
-
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import { MainLink } from '../shared/StyledComponents'
 import { Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
@@ -8,6 +6,8 @@ import { Link as RouterLink } from 'react-router-dom'
 import { RIFService, ServiceItemProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
+import { getProviders, getLendingService } from '../shared/contracts'
+import { ethers } from 'ethers'
 
 const Row = withStyles({
   root: {
@@ -56,26 +56,40 @@ const mockServices = [
 
 const Services = () => {
   // eslint-disable-next-line no-unused-vars
-  const [services, setServices] = useState<RIFService[]>(mockServices)
+  const [services, setServices] = useState<RIFService[]>([])
   // eslint-disable-next-line no-unused-vars
   const [activeServices, setActiveServices] = useState<RIFService[]>(mockActiveServices)
   // eslint-disable-next-line no-unused-vars
   const [signer, network, account] = useConnector(state => [state.signer, state.network, state.account], shallow)
 
-  // useEffect(() => {
-  //   const fetchServices = async () => {
-  //     if (!signer || !account) return
-  //
-  //     const { Providers } = ContractInstances(signer)
-  //     try {
-  //       const servicesAddresses = await Providers.getServices()
-  //       console.log(servicesAddresses)
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   fetchServices()
-  // }, [signer, account])
+  useEffect(() => {
+    const fetchServices = async () => {
+      if (!signer || !account) return
+
+      const Providers = getProviders(signer)
+      try {
+        const servicesAddresses = await Providers.getServices()
+        const service = getLendingService(signer, servicesAddresses[0])
+        const listingsCount = await service.getListingCount()
+        const promises = []
+        for (let i = 0; i < +listingsCount; i++) {
+          promises.push(service.getListing(ethers.constants.AddressZero, i))
+        }
+        const listings = await Promise.all(promises)
+        const listingObjects = listings.map((listing) => ({
+          serviceProviderName: 'ACME',
+          listingAddress: servicesAddresses[0],
+          listingName: 'Lending Service',
+          balance: 0,
+          apy: +listing.rewardRate
+        }))
+        setServices([...services, ...listingObjects])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchServices()
+  }, [signer, account])
 
   return (
     <>
@@ -125,16 +139,16 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
         <Typography style={{ color: 'black' }} variant="h3" component="span">{listingName}</Typography>
         <Typography style={{ color: 'black' }} variant="body1" component="span">{serviceProviderName}</Typography>
       </div>
+      <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
       {!available
-        ? <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
-            <Typography variant="body1" component="span">
+        ? <Typography variant="body1" component="span">
               Balance: {balance} rBTC
             </Typography>
-            <Typography variant="body1" component="span">
-              APY: {apy}%
-            </Typography>
-          </div>
         : <div /> }
+        <Typography variant="body1" component="span">
+          APY: {apy}%
+        </Typography>
+      </div>
       <MainLink component={RouterLink} style={{ color: 'white', background: '#2196f3', padding: '15px', borderRadius: '15px' }} to={'/wsb/send?token='}>
         {available ? 'Consume' : 'Withdraw'}
       </MainLink>
