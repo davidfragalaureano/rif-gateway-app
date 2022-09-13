@@ -1,12 +1,14 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { MainLink } from '../shared/StyledComponents'
 import { Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-
-import { IService } from '../shared/utils'
 import { Link as RouterLink } from 'react-router-dom'
+import { RIFService, ServiceItemProps } from './types'
+import shallow from 'zustand/shallow'
+import useConnector from '../connect/useConnector'
+import { ContractInstances } from '../shared/contracts'
 
 const Row = withStyles({
   root: {
@@ -20,8 +22,9 @@ const Row = withStyles({
 })(Container)
 
 const Services = () => {
-  let [services, setServices] = useState<IService[]>([])
-  let [activeServices, setActiveServices] = useState<IService[]>([])
+  let [services, setServices] = useState<RIFService[]>([])
+  let [activeServices, setActiveServices] = useState<RIFService[]>([])
+  const [signer, network, account] = useConnector(state => [state.signer, state.network, state.account], shallow)
 
   activeServices = [
     {
@@ -30,14 +33,14 @@ const Services = () => {
       listingName: 'Lending Service',
       balance: 500,
       apy: 5.4
-    } as IService,
+    },
     {
       serviceProviderName: 'Growr',
       listingAddress: '0xasdf',
       listingName: 'Borrowing Service',
       balance: 300,
       apy: 3.5
-    } as IService
+    }
   ]
 
   services = [
@@ -47,15 +50,29 @@ const Services = () => {
       listingName: 'Borrowing Service',
       balance: 0,
       apy: 0
-    } as IService,
+    },
     {
       serviceProviderName: 'Growr',
       listingAddress: '0xasdf',
       listingName: 'Lending Service',
       balance: 0,
       apy: 0
-    } as IService
+    }
   ]
+
+  const fetchServices = async () => {
+    if (!signer) {
+      throw new Error('Empty signer')
+    }
+
+    const { Providers } = ContractInstances(signer)
+    const servicesAddresses = await Providers.getServices()
+    console.log(servicesAddresses)
+  }
+
+  useEffect(() => {
+     fetchServices()
+  }, [])
 
   return (
     <>
@@ -98,14 +115,7 @@ const Services = () => {
 
 export default Services
 
-interface ServiceItemProps {
-  serviceProviderName: string,
-  listingName: string,
-  listingAddress: string,
-  available: boolean,
-  balance: number,
-  apy: number
-}
+
 
 const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress, available, balance, apy }) => {
   return (
