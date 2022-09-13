@@ -48,6 +48,8 @@ export interface IService {
   serviceProviderName: string,
   listingName: string,
   listingAddress: string
+  balance: number,
+  apy: number
 }
 
 export const fetchTokenBalance = async (signer: Signer, address: string, account: string): Promise<ITokenBalance> => {

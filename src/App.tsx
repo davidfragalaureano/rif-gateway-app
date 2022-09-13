@@ -17,6 +17,7 @@ import useConnector from './connect/useConnector'
 import Send from './send/Send'
 import Receive from './Receive'
 import Balances from './balances/Balances'
+import Services from './services/Services'
 
 const App = () => {
   return (
@@ -70,9 +71,9 @@ const Routes = () => {
           </Route>
           <ConnectedRoute
             exact
-            path="/contracts"
+            path="/services"
             isConnected={isConnected}
-            component={() => <div></div>}
+            component={() => <Services />}
           />
         </Layout>
         <Route path="*">

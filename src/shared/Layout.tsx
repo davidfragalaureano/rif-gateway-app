@@ -60,7 +60,7 @@ const Layout: React.FC<Props> = ({ children }) => {
               <MenuLink component={RouterLink} to="/wsb/wallet">Wallet</MenuLink>
               <MenuLink component={RouterLink} to="/wsb/send">Send</MenuLink>
               <MenuLink component={RouterLink} to="/wsb/receive">Receive</MenuLink>
-              <MenuLink component={RouterLink} to="/contracts">Contracts</MenuLink>
+              <MenuLink component={RouterLink} to="/services">Services</MenuLink>
             </Hidden>
             <Hidden mdUp>
               <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-end' }}>
