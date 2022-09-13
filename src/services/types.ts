@@ -3,7 +3,8 @@ export type RIFService = {
     listingName: string,
     listingAddress: string
     balance: number,
-    apy: number
+    apy: number,
+    id: number
 }
 
 export type ServiceItemProps = {
@@ -12,5 +13,7 @@ export type ServiceItemProps = {
     listingAddress: string,
     available: boolean,
     balance: number,
-    apy: number
+    apy: number,
+    id: number,
+    onClickHandler: Function
 }

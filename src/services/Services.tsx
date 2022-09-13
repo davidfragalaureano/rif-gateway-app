@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { MainLink } from '../shared/StyledComponents'
-import { Container, Typography } from '@mui/material'
+import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
 import { Link as RouterLink } from 'react-router-dom'
 import { RIFService, ServiceItemProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
-import { getProviders, getLendingService } from '../shared/contracts'
-import { ethers } from 'ethers'
+import { getProviders, getLendingService, getUserIdentityFactory } from '../shared/contracts'
+import { BigNumber, ethers } from 'ethers'
+import { LensRounded } from '@mui/icons-material'
 
+
+const SERVICE_KEY = 'SERVICES'
 const Row = withStyles({
   root: {
     display: 'flex',
@@ -20,47 +23,31 @@ const Row = withStyles({
   }
 })(Container)
 
-const mockActiveServices = [
-  {
-    serviceProviderName: 'Tropykus',
-    listingAddress: '0xasdf',
-    listingName: 'Lending Service',
-    balance: 500,
-    apy: 5.4
-  },
-  {
-    serviceProviderName: 'Growr',
-    listingAddress: '0xasdf',
-    listingName: 'Borrowing Service',
-    balance: 300,
-    apy: 3.5
-  }
-]
-
-const mockServices = [
-  {
-    serviceProviderName: 'Tropykus',
-    listingAddress: '0xasdf',
-    listingName: 'Borrowing Service',
-    balance: 0,
-    apy: 0
-  },
-  {
-    serviceProviderName: 'Growr',
-    listingAddress: '0xasdf',
-    listingName: 'Lending Service',
-    balance: 0,
-    apy: 0
-  }
-]
-
+const mockActiveServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
 const Services = () => {
   // eslint-disable-next-line no-unused-vars
-  const [services, setServices] = useState<RIFService[]>([])
+  const [historicServices, setHistoricServices] = useState<RIFService[]>(mockActiveServices)
   // eslint-disable-next-line no-unused-vars
-  const [activeServices, setActiveServices] = useState<RIFService[]>(mockActiveServices)
+  const [availableServices, setAvailableServices] = useState<RIFService[]>([])
   // eslint-disable-next-line no-unused-vars
-  const [signer, network, account] = useConnector(state => [state.signer, state.network, state.account], shallow)
+  const [signer, account] = useConnector(state => [state.signer, state.account], shallow)
+
+  
+  useEffect(() => {
+    if (!signer || !account) return
+
+    const promises = historicServices.map(async (service: RIFService) => {
+      const lendingService = getLendingService(signer, service.listingAddress)
+      const balance = await lendingService.getBalance()
+      service.balance = +balance / 1e18
+
+      return service
+    })
+    
+    Promise.all(promises).then((updatedServices: RIFService[]) => {
+      setHistoricServices(updatedServices)
+    })
+  })
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -76,20 +63,53 @@ const Services = () => {
           promises.push(service.getListing(ethers.constants.AddressZero, i))
         }
         const listings = await Promise.all(promises)
+        console.log(listings)
+        
         const listingObjects = listings.map((listing) => ({
           serviceProviderName: 'ACME',
           listingAddress: servicesAddresses[0],
           listingName: 'Lending Service',
           balance: 0,
-          apy: +listing.rewardRate
+          apy: +listing.rewardRate,
+          id: +listing.id
         }))
-        setServices([...services, ...listingObjects])
+
+        setAvailableServices([...availableServices, ...listingObjects])
       } catch (error) {
         console.log(error)
       }
     }
     fetchServices()
   }, [signer, account])
+
+  const authorizeServiceProvider = async (serviceAddr: string) => {
+    if (!signer || !account) return
+
+    const identityFactory = getUserIdentityFactory(signer)
+
+    await (await identityFactory.authorize(serviceAddr, true)).wait()
+  }
+
+  const consumeService = async (serviceItem: ServiceItemProps) => {
+    if (!signer || !account) return
+
+    const { id: consumedServiceId, listingAddress } = serviceItem
+    const value = ethers.utils.parseEther('50')
+    const lendingService = getLendingService(signer, listingAddress)
+    
+    await authorizeServiceProvider(listingAddress)
+    await (await lendingService.lend({ value })).wait()
+    
+    const balanceLent = await lendingService.getBalance()
+    serviceItem.balance = (+balanceLent / 1e18)
+    
+    const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
+    const servicesUpdated = [..._historicServices, serviceItem]
+    localStorage.setItem(SERVICE_KEY, JSON.stringify(servicesUpdated))
+    
+    setHistoricServices(servicesUpdated)
+    setAvailableServices(availableServices.filter(({ id }) => id !== consumedServiceId))
+  }
 
   return (
     <>
@@ -98,7 +118,7 @@ const Services = () => {
           Service History
         </Typography>
       </Row>
-      {activeServices.map((service, index) => (
+      {historicServices.map((service, index) => (
         <ServiceItem
           key={`active-service-item-row${index}`}
           serviceProviderName={service.serviceProviderName}
@@ -107,6 +127,8 @@ const Services = () => {
           available={false}
           balance={service.balance}
           apy={service.apy}
+          id={service.id}
+          onClickHandler={consumeService}
         />
       ))}
 
@@ -115,7 +137,7 @@ const Services = () => {
           Available Services
         </Typography>
       </Row>
-      {services.map((service, index) => (
+      {availableServices.map((service, index) => (
         <ServiceItem
           key={`service-item-row${index}`}
           serviceProviderName={service.serviceProviderName}
@@ -124,6 +146,8 @@ const Services = () => {
           available={true}
           balance={service.balance}
           apy={service.apy}
+          id={service.id}
+          onClickHandler={consumeService}
         />
       ))}
     </>
@@ -132,7 +156,7 @@ const Services = () => {
 
 export default Services
 
-const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress, available, balance, apy }) => {
+const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress, available, balance, apy, id, onClickHandler }) => {
   return (
     <Row style={{ padding: '15px', background: 'white', borderRadius: '15px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
@@ -149,9 +173,13 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
           APY: {apy}%
         </Typography>
       </div>
-      <MainLink component={RouterLink} style={{ color: 'white', background: '#2196f3', padding: '15px', borderRadius: '15px' }} to={'/wsb/send?token='}>
-        {available ? 'Consume' : 'Withdraw'}
-      </MainLink>
+      
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Button variant='contained' size='medium' className="float-right" onClick={() => { onClickHandler({ serviceProviderName, listingName, listingAddress, available, balance, apy, id }) }}>
+          {available ? 'Consume' : 'Withdraw'}
+        </Button>
+      </div>
+ 
     </Row>
   )
 }
