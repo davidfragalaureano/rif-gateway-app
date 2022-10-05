@@ -28,6 +28,7 @@ export interface UserIdentityFactoryInterface extends utils.Interface {
     "createIdentity(address)": FunctionFragment;
     "getIdentity(address)": FunctionFragment;
     "isAllowedToExecuteCallFor(address)": FunctionFragment;
+    "isAllowedToExecuteCallFor(address,address)": FunctionFragment;
   };
 
   getFunction(
@@ -35,7 +36,8 @@ export interface UserIdentityFactoryInterface extends utils.Interface {
       | "authorize"
       | "createIdentity"
       | "getIdentity"
-      | "isAllowedToExecuteCallFor"
+      | "isAllowedToExecuteCallFor(address)"
+      | "isAllowedToExecuteCallFor(address,address)"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -51,8 +53,12 @@ export interface UserIdentityFactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
@@ -65,7 +71,11 @@ export interface UserIdentityFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
     data: BytesLike
   ): Result;
 
@@ -115,8 +125,14 @@ export interface UserIdentityFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
@@ -137,8 +153,14 @@ export interface UserIdentityFactory extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  isAllowedToExecuteCallFor(
+  "isAllowedToExecuteCallFor(address)"(
     user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isAllowedToExecuteCallFor(address,address)"(
+    user: PromiseOrValue<string>,
+    caller: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -159,8 +181,14 @@ export interface UserIdentityFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -184,8 +212,14 @@ export interface UserIdentityFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -207,8 +241,14 @@ export interface UserIdentityFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

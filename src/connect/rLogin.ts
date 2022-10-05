@@ -9,7 +9,7 @@ export enum ENetwork {
     // eslint-disable-next-line no-unused-vars
     RSKTestnet = 31,
     // eslint-disable-next-line no-unused-vars
-    Ganache = 31337,
+    Ganache = 1337,
   }
 
 export const SupportedNetworks = [ENetwork.RSKMainnet, ENetwork.RSKTestnet, ENetwork.Ganache]

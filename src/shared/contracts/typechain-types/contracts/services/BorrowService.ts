@@ -64,7 +64,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     "addListing((uint256,uint256,uint256,uint256,uint256,address,address))": FunctionFragment;
     "borrow(uint256,address,uint256,uint256)": FunctionFragment;
     "currentLiquidity(address,uint256)": FunctionFragment;
-    "getListing(uint256,address)": FunctionFragment;
+    "getListing(address,uint256)": FunctionFragment;
     "getListingsCount(address)": FunctionFragment;
     "listings(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -74,6 +74,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "withdraw()": FunctionFragment;
   };
 
   getFunction(
@@ -92,6 +93,7 @@ export interface BorrowServiceInterface extends utils.Interface {
       | "renounceOwnership"
       | "serviceType"
       | "transferOwnership"
+      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -121,7 +123,7 @@ export interface BorrowServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getListing",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getListingsCount",
@@ -164,6 +166,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "addLiquidity",
@@ -203,6 +206,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Borrow(uint256,address,address,uint256,uint256)": EventFragment;
@@ -210,6 +214,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     "ListingRemoved(uint256,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Pay(uint256,address,address,uint256)": EventFragment;
+    "Withdraw(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Borrow"): EventFragment;
@@ -217,6 +222,7 @@ export interface BorrowServiceInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ListingRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Pay"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
 
 export interface BorrowEventObject {
@@ -281,6 +287,18 @@ export type PayEvent = TypedEvent<
 
 export type PayEventFilter = TypedEventFilter<PayEvent>;
 
+export interface WithdrawEventObject {
+  withdrawer: string;
+  currency: string;
+  amount: BigNumber;
+}
+export type WithdrawEvent = TypedEvent<
+  [string, string, BigNumber],
+  WithdrawEventObject
+>;
+
+export type WithdrawEventFilter = TypedEventFilter<WithdrawEvent>;
+
 export interface BorrowService extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -335,8 +353,8 @@ export interface BorrowService extends BaseContract {
     ): Promise<[BigNumber] & { liquidity: BigNumber }>;
 
     getListing(
-      index: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
+      listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [BorrowService.BorrowServiceListingStructOutput] & {
@@ -405,6 +423,10 @@ export interface BorrowService extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   addLiquidity(
@@ -434,8 +456,8 @@ export interface BorrowService extends BaseContract {
   ): Promise<BigNumber>;
 
   getListing(
-    index: PromiseOrValue<BigNumberish>,
     currency: PromiseOrValue<string>,
+    listingId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BorrowService.BorrowServiceListingStructOutput>;
 
@@ -493,6 +515,10 @@ export interface BorrowService extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdraw(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     addLiquidity(
       amount: PromiseOrValue<BigNumberish>,
@@ -521,8 +547,8 @@ export interface BorrowService extends BaseContract {
     ): Promise<BigNumber>;
 
     getListing(
-      index: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
+      listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BorrowService.BorrowServiceListingStructOutput>;
 
@@ -585,6 +611,8 @@ export interface BorrowService extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdraw(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -644,6 +672,17 @@ export interface BorrowService extends BaseContract {
       currency?: PromiseOrValue<string> | null,
       amount?: null
     ): PayEventFilter;
+
+    "Withdraw(address,address,uint256)"(
+      withdrawer?: PromiseOrValue<string> | null,
+      currency?: null,
+      amount?: null
+    ): WithdrawEventFilter;
+    Withdraw(
+      withdrawer?: PromiseOrValue<string> | null,
+      currency?: null,
+      amount?: null
+    ): WithdrawEventFilter;
   };
 
   estimateGas: {
@@ -674,8 +713,8 @@ export interface BorrowService extends BaseContract {
     ): Promise<BigNumber>;
 
     getListing(
-      index: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
+      listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -722,6 +761,10 @@ export interface BorrowService extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -752,8 +795,8 @@ export interface BorrowService extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getListing(
-      index: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
+      listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -798,6 +841,10 @@ export interface BorrowService extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

@@ -27,13 +27,15 @@ export interface $UserIdentityACLInterface extends utils.Interface {
     "$_allowedContractCalls(address,address)": FunctionFragment;
     "authorize(address,bool)": FunctionFragment;
     "isAllowedToExecuteCallFor(address)": FunctionFragment;
+    "isAllowedToExecuteCallFor(address,address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "$_allowedContractCalls"
       | "authorize"
-      | "isAllowedToExecuteCallFor"
+      | "isAllowedToExecuteCallFor(address)"
+      | "isAllowedToExecuteCallFor(address,address)"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -45,8 +47,12 @@ export interface $UserIdentityACLInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(
@@ -55,7 +61,11 @@ export interface $UserIdentityACLInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
     data: BytesLike
   ): Result;
 
@@ -101,8 +111,14 @@ export interface $UserIdentityACL extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
@@ -119,8 +135,14 @@ export interface $UserIdentityACL extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  isAllowedToExecuteCallFor(
+  "isAllowedToExecuteCallFor(address)"(
     user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isAllowedToExecuteCallFor(address,address)"(
+    user: PromiseOrValue<string>,
+    caller: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -137,8 +159,14 @@ export interface $UserIdentityACL extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -158,8 +186,14 @@ export interface $UserIdentityACL extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -177,8 +211,14 @@ export interface $UserIdentityACL extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

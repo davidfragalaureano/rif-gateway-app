@@ -28,6 +28,7 @@ export interface $IUserIdentityFactoryInterface extends utils.Interface {
     "createIdentity(address)": FunctionFragment;
     "getIdentity(address)": FunctionFragment;
     "isAllowedToExecuteCallFor(address)": FunctionFragment;
+    "isAllowedToExecuteCallFor(address,address)": FunctionFragment;
   };
 
   getFunction(
@@ -35,7 +36,8 @@ export interface $IUserIdentityFactoryInterface extends utils.Interface {
       | "authorize"
       | "createIdentity"
       | "getIdentity"
-      | "isAllowedToExecuteCallFor"
+      | "isAllowedToExecuteCallFor(address)"
+      | "isAllowedToExecuteCallFor(address,address)"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -51,8 +53,12 @@ export interface $IUserIdentityFactoryInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(functionFragment: "authorize", data: BytesLike): Result;
@@ -65,7 +71,11 @@ export interface $IUserIdentityFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isAllowedToExecuteCallFor",
+    functionFragment: "isAllowedToExecuteCallFor(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isAllowedToExecuteCallFor(address,address)",
     data: BytesLike
   ): Result;
 
@@ -112,11 +122,17 @@ export interface $IUserIdentityFactory extends BaseContract {
 
     getIdentity(
       user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
@@ -134,11 +150,17 @@ export interface $IUserIdentityFactory extends BaseContract {
 
   getIdentity(
     user: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  isAllowedToExecuteCallFor(
+  "isAllowedToExecuteCallFor(address)"(
     user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "isAllowedToExecuteCallFor(address,address)"(
+    user: PromiseOrValue<string>,
+    caller: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -159,8 +181,14 @@ export interface $IUserIdentityFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
@@ -181,11 +209,17 @@ export interface $IUserIdentityFactory extends BaseContract {
 
     getIdentity(
       user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -204,11 +238,17 @@ export interface $IUserIdentityFactory extends BaseContract {
 
     getIdentity(
       user: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isAllowedToExecuteCallFor(
+    "isAllowedToExecuteCallFor(address)"(
       user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "isAllowedToExecuteCallFor(address,address)"(
+      user: PromiseOrValue<string>,
+      caller: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

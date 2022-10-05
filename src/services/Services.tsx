@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-import { RIFService, ServiceItemProps } from './types'
+import { BorrowServiceListing, RIFService, ServiceItemProps, ServiceTypes } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
-import { getProviders, getLendingService, getUserIdentityFactory } from '../shared/contracts'
-import { ethers } from 'ethers'
+import { getProviders, getLendingService, getUserIdentityFactory, getService, getBorrowService, LendingService, BorrowService } from '../shared/contracts'
+import { BigNumber, ethers } from 'ethers'
 
 const SERVICE_KEY = 'SERVICES'
 const Row = withStyles({
@@ -32,21 +32,20 @@ const Services = () => {
       const Providers = getProviders(signer)
       try {
         const servicesAddresses = await Providers.getServices()
-        const service = getLendingService(signer, servicesAddresses[0])
-        const listingsCount = await service.getListingCount()
-        const promises = []
-        for (let i = 0; i < +listingsCount; i++) {
-          promises.push(service.getListing(ethers.constants.AddressZero, i))
-        }
-        const listings = await Promise.all(promises)
-        console.log(listings)
-        const listingObjects = listings.map((listing) => ({
+        const services = servicesAddresses.map(address => getService(signer, address))
+        const servicesWithType = await Promise.all(services.map(async (service) => { return { serviceType: await service.serviceType(), service: service } }))
+        const borrowServices = servicesWithType.filter(({ serviceType }) => serviceType === ServiceTypes.Borrowing).map(({ service }) => getBorrowService(signer, service.address))
+
+
+        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as BorrowServiceListing[];
+
+        const listingObjects = listings.map((listing, index) => ({
           serviceProviderName: 'ACME',
           listingAddress: servicesAddresses[0],
           listingName: 'Lending Service',
           balance: 0,
-          apy: +listing.rewardRate,
-          id: +listing.id,
+          apy: +listing.interestRate,
+          id: index,
           used: false
         }))
 
@@ -172,11 +171,11 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
         <Typography style={{ color: 'black' }} variant="body1" component="span">{serviceProviderName}</Typography>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
-      {!available
-        ? <Typography variant="body1" component="span">
-              Balance: {balance} rBTC
-            </Typography>
-        : <div /> }
+        {!available
+          ? <Typography variant="body1" component="span">
+            Balance: {balance} rBTC
+          </Typography>
+          : <div />}
         <Typography variant="body1" component="span">
           APY: {apy}%
         </Typography>
@@ -192,3 +191,13 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
     </Row>
   )
 }
+async function getListings(service: LendingService | BorrowService) {
+  const listingsCount = await service.getListingsCount(process.env.REACT_APP_DOC_ADDRESS!)
+  const promises = []
+  for (let i = 0; i < +listingsCount; i++) {
+    promises.push(service.getListing(ethers.constants.AddressZero, BigNumber.from(i)))
+  }
+  const listings = await Promise.all(promises)
+  return listings
+}
+

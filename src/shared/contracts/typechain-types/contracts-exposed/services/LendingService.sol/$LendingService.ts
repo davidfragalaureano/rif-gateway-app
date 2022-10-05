@@ -64,7 +64,7 @@ export interface $LendingServiceInterface extends utils.Interface {
     "addListing(uint256,uint256,address,uint8,uint256)": FunctionFragment;
     "getBalance()": FunctionFragment;
     "getListing(address,uint256)": FunctionFragment;
-    "getListingCount()": FunctionFragment;
+    "getListingsCount()": FunctionFragment;
     "lend()": FunctionFragment;
     "listings(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -85,7 +85,7 @@ export interface $LendingServiceInterface extends utils.Interface {
       | "addListing"
       | "getBalance"
       | "getListing"
-      | "getListingCount"
+      | "getListingsCount"
       | "lend"
       | "listings"
       | "owner"
@@ -129,7 +129,7 @@ export interface $LendingServiceInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getListingCount",
+    functionFragment: "getListingsCount",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "lend", values?: undefined): string;
@@ -177,7 +177,7 @@ export interface $LendingServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getListingCount",
+    functionFragment: "getListingsCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "lend", data: BytesLike): Result;
@@ -319,7 +319,7 @@ export interface $LendingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[LendingService.LendingServiceListingStructOutput]>;
 
-    getListingCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lend(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -400,7 +400,7 @@ export interface $LendingService extends BaseContract {
     overrides?: CallOverrides
   ): Promise<LendingService.LendingServiceListingStructOutput>;
 
-  getListingCount(overrides?: CallOverrides): Promise<BigNumber>;
+  getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
   lend(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -479,7 +479,7 @@ export interface $LendingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<LendingService.LendingServiceListingStructOutput>;
 
-    getListingCount(overrides?: CallOverrides): Promise<BigNumber>;
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     lend(overrides?: CallOverrides): Promise<void>;
 
@@ -597,7 +597,7 @@ export interface $LendingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getListingCount(overrides?: CallOverrides): Promise<BigNumber>;
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     lend(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -670,7 +670,7 @@ export interface $LendingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getListingCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getListingsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lend(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }

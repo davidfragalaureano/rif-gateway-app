@@ -29,9 +29,9 @@ export function getAddressExplorerLink (network?: ENetwork, address?: string): s
 }
 
 export const formatBigNumber = (price: EthBigNumber, decimals: number) => {
-  const bigNumber = new BigNumber(price.toString()).div(10 ** decimals)
+  const bigNumber = new BigNumber(price.toString()).div(10 ** decimals)!
 
-  if (bigNumber.decimalPlaces() > 0) {
+  if (bigNumber.decimalPlaces()! > 0) {
     return bigNumber.toFormat(4)
   }
 

@@ -101,6 +101,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Service__factory>;
     getContractFactory(
+      name: "TropykusBorrowingService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TropykusBorrowingService__factory>;
+    getContractFactory(
+      name: "TropykusLendingService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TropykusLendingService__factory>;
+    getContractFactory(
       name: "IUserIdentityACL",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IUserIdentityACL__factory>;
@@ -231,6 +239,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Service>;
+    getContractAt(
+      name: "TropykusBorrowingService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TropykusBorrowingService>;
+    getContractAt(
+      name: "TropykusLendingService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TropykusLendingService>;
     getContractAt(
       name: "IUserIdentityACL",
       address: string,

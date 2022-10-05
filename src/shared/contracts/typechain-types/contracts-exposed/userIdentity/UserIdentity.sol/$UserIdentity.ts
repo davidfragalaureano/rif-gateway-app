@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -31,11 +32,18 @@ export interface $UserIdentityInterface extends utils.Interface {
   functions: {
     "read(address,bytes)": FunctionFragment;
     "retrieve(address,bytes)": FunctionFragment;
+    "retrieveTokens(address,bytes,address)": FunctionFragment;
     "send(address,bytes)": FunctionFragment;
+    "sendTokens(address,bytes,address,uint256,address)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "read" | "retrieve" | "send"
+    nameOrSignatureOrTopic:
+      | "read"
+      | "retrieve"
+      | "retrieveTokens"
+      | "send"
+      | "sendTokens"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -47,32 +55,55 @@ export interface $UserIdentityInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
+    functionFragment: "retrieveTokens",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "send",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sendTokens",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
 
   decodeFunctionResult(functionFragment: "read", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "retrieve", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "retrieveTokens",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "send", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "sendTokens", data: BytesLike): Result;
 
   events: {
-    "ReceivedLiquidity(address,uint256)": EventFragment;
+    "LiquidityReceived(address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "ReceivedLiquidity"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LiquidityReceived"): EventFragment;
 }
 
-export interface ReceivedLiquidityEventObject {
-  _from: string;
-  _amount: BigNumber;
+export interface LiquidityReceivedEventObject {
+  from: string;
+  amount: BigNumber;
 }
-export type ReceivedLiquidityEvent = TypedEvent<
+export type LiquidityReceivedEvent = TypedEvent<
   [string, BigNumber],
-  ReceivedLiquidityEventObject
+  LiquidityReceivedEventObject
 >;
 
-export type ReceivedLiquidityEventFilter =
-  TypedEventFilter<ReceivedLiquidityEvent>;
+export type LiquidityReceivedEventFilter =
+  TypedEventFilter<LiquidityReceivedEvent>;
 
 export interface $UserIdentity extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -102,110 +133,187 @@ export interface $UserIdentity extends BaseContract {
 
   functions: {
     read(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     retrieve(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    retrieveTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     send(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    sendTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      kToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
   read(
-    contractToCall: PromiseOrValue<string>,
+    targetContract: PromiseOrValue<string>,
     functionToCall: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   retrieve(
-    contractToCall: PromiseOrValue<string>,
+    targetContract: PromiseOrValue<string>,
     functionToCall: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  retrieveTokens(
+    targetContract: PromiseOrValue<string>,
+    functionToCall: PromiseOrValue<BytesLike>,
+    token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   send(
-    contractToCall: PromiseOrValue<string>,
+    targetContract: PromiseOrValue<string>,
     functionToCall: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  sendTokens(
+    targetContract: PromiseOrValue<string>,
+    functionToCall: PromiseOrValue<BytesLike>,
+    token: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    kToken: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     read(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     retrieve(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    send(
-      contractToCall: PromiseOrValue<string>,
+    retrieveTokens(
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    send(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    sendTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      kToken: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
   };
 
   filters: {
-    "ReceivedLiquidity(address,uint256)"(
-      _from?: null,
-      _amount?: null
-    ): ReceivedLiquidityEventFilter;
-    ReceivedLiquidity(
-      _from?: null,
-      _amount?: null
-    ): ReceivedLiquidityEventFilter;
+    "LiquidityReceived(address,uint256)"(
+      from?: null,
+      amount?: null
+    ): LiquidityReceivedEventFilter;
+    LiquidityReceived(from?: null, amount?: null): LiquidityReceivedEventFilter;
   };
 
   estimateGas: {
     read(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     retrieve(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    retrieveTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     send(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    sendTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      kToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     read(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     retrieve(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    retrieveTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     send(
-      contractToCall: PromiseOrValue<string>,
+      targetContract: PromiseOrValue<string>,
       functionToCall: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    sendTokens(
+      targetContract: PromiseOrValue<string>,
+      functionToCall: PromiseOrValue<BytesLike>,
+      token: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      kToken: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers"
+
 export type RIFService = {
     serviceProviderName: string,
     listingName: string,
@@ -18,4 +20,19 @@ export type ServiceItemProps = {
     id: number,
     used: boolean,
     onClickHandler: Function
+}
+
+export enum ServiceTypes {
+    Lending,
+    Borrowing
+}
+
+export type BorrowServiceListing = {
+    minAmount: BigNumber;
+    maxAmount: BigNumber;
+    maxDuration: BigNumber;
+    interestRate: BigNumber;
+    loanToValue: BigNumber;
+    loanToValueTokenAddr: string;
+    currency: string;
 }
