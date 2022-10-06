@@ -97,6 +97,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Providers__factory>;
     getContractFactory(
+      name: "IBorrowService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IBorrowService__factory>;
+    getContractFactory(
+      name: "ILendingService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILendingService__factory>;
+    getContractFactory(
+      name: "IService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IService__factory>;
+    getContractFactory(
       name: "Service",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Service__factory>;
@@ -234,6 +246,21 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Providers>;
+    getContractAt(
+      name: "IBorrowService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IBorrowService>;
+    getContractAt(
+      name: "ILendingService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILendingService>;
+    getContractAt(
+      name: "IService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IService>;
     getContractAt(
       name: "Service",
       address: string,

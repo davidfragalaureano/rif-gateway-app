@@ -28,32 +28,48 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export declare namespace LendingService {
-  export type LendingServiceListingStruct = {
-    id: PromiseOrValue<BigNumberish>;
-    minDuration: PromiseOrValue<BigNumberish>;
-    maxDuration: PromiseOrValue<BigNumberish>;
-    currency: PromiseOrValue<string>;
-    payBackOption: PromiseOrValue<BigNumberish>;
-    rewardRate: PromiseOrValue<BigNumberish>;
-  };
+export type ServiceListingStruct = {
+  id: PromiseOrValue<BigNumberish>;
+  minAmount: PromiseOrValue<BigNumberish>;
+  maxAmount: PromiseOrValue<BigNumberish>;
+  minDuration: PromiseOrValue<BigNumberish>;
+  maxDuration: PromiseOrValue<BigNumberish>;
+  interestRate: PromiseOrValue<BigNumberish>;
+  loanToValue: PromiseOrValue<BigNumberish>;
+  loanToValueTokenAddr: PromiseOrValue<string>;
+  currency: PromiseOrValue<string>;
+  payBackOption: PromiseOrValue<BigNumberish>;
+  enabled: PromiseOrValue<boolean>;
+  name: PromiseOrValue<string>;
+};
 
-  export type LendingServiceListingStructOutput = [
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string,
-    number,
-    BigNumber
-  ] & {
-    id: BigNumber;
-    minDuration: BigNumber;
-    maxDuration: BigNumber;
-    currency: string;
-    payBackOption: number;
-    rewardRate: BigNumber;
-  };
-}
+export type ServiceListingStructOutput = [
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  string,
+  string,
+  number,
+  boolean,
+  string
+] & {
+  id: BigNumber;
+  minAmount: BigNumber;
+  maxAmount: BigNumber;
+  minDuration: BigNumber;
+  maxDuration: BigNumber;
+  interestRate: BigNumber;
+  loanToValue: BigNumber;
+  loanToValueTokenAddr: string;
+  currency: string;
+  payBackOption: number;
+  enabled: boolean;
+  name: string;
+};
 
 export interface $TropykusLendingServiceInterface extends utils.Interface {
   functions: {
@@ -61,18 +77,18 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
     "$_msgData()": FunctionFragment;
     "$_msgSender()": FunctionFragment;
     "$_transferOwnership(address)": FunctionFragment;
-    "addListing(uint256,uint256,address,uint8,uint256)": FunctionFragment;
-    "getBalance()": FunctionFragment;
-    "getListing(address,uint256)": FunctionFragment;
+    "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
+    "disableListing(uint256)": FunctionFragment;
+    "getBalance(address)": FunctionFragment;
+    "getListing(uint256)": FunctionFragment;
     "getListingsCount()": FunctionFragment;
     "lend()": FunctionFragment;
-    "listings(address,uint256)": FunctionFragment;
+    "listings(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
-    "removeListing(address,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "update(address,(uint256,uint256,uint256,address,uint8,uint256))": FunctionFragment;
+    "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
@@ -83,17 +99,17 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
       | "$_msgSender"
       | "$_transferOwnership"
       | "addListing"
+      | "disableListing"
       | "getBalance"
       | "getListing"
       | "getListingsCount"
       | "lend"
       | "listings"
       | "owner"
-      | "removeListing"
       | "renounceOwnership"
       | "serviceType"
       | "transferOwnership"
-      | "update"
+      | "updateListing"
       | "withdraw"
   ): FunctionFragment;
 
@@ -112,21 +128,19 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addListing",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [ServiceListingStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "disableListing",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getBalance",
-    values?: undefined
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getListing",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getListingsCount",
@@ -135,13 +149,9 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "lend", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "listings",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "removeListing",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -155,8 +165,8 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "update",
-    values: [PromiseOrValue<string>, LendingService.LendingServiceListingStruct]
+    functionFragment: "updateListing",
+    values: [ServiceListingStruct]
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
@@ -174,6 +184,10 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addListing", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "disableListing",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
   decodeFunctionResult(
@@ -183,10 +197,6 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "lend", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "listings", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "removeListing",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -199,29 +209,51 @@ export interface $TropykusLendingServiceInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "update", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "updateListing",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "Lend(address,address,uint256)": EventFragment;
+    "Borrow(uint256,address,address,uint256,uint256)": EventFragment;
+    "Lend(uint256,address,address,uint256)": EventFragment;
     "ListingCreated(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Withdraw(address,address,uint256)": EventFragment;
+    "Pay(uint256,address,address,uint256)": EventFragment;
+    "Withdraw(uint256,address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Borrow"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Lend"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ListingCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Pay"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
 
+export interface BorrowEventObject {
+  listingId: BigNumber;
+  borrower: string;
+  currency: string;
+  amount: BigNumber;
+  duration: BigNumber;
+}
+export type BorrowEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber, BigNumber],
+  BorrowEventObject
+>;
+
+export type BorrowEventFilter = TypedEventFilter<BorrowEvent>;
+
 export interface LendEventObject {
+  listingId: BigNumber;
   lender: string;
   currency: string;
   amount: BigNumber;
 }
 export type LendEvent = TypedEvent<
-  [string, string, BigNumber],
+  [BigNumber, string, string, BigNumber],
   LendEventObject
 >;
 
@@ -250,13 +282,27 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
+export interface PayEventObject {
+  listingId: BigNumber;
+  borrower: string;
+  currency: string;
+  amount: BigNumber;
+}
+export type PayEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber],
+  PayEventObject
+>;
+
+export type PayEventFilter = TypedEventFilter<PayEvent>;
+
 export interface WithdrawEventObject {
+  listingId: BigNumber;
   withdrawer: string;
   currency: string;
   amount: BigNumber;
 }
 export type WithdrawEvent = TypedEvent<
-  [string, string, BigNumber],
+  [BigNumber, string, string, BigNumber],
   WithdrawEventObject
 >;
 
@@ -301,21 +347,24 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<ContractTransaction>;
 
     addListing(
-      minDuration: PromiseOrValue<BigNumberish>,
-      maxDuration: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
-      payBackOption: PromiseOrValue<BigNumberish>,
-      rewardRate: PromiseOrValue<BigNumberish>,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getListing(
-      currency: PromiseOrValue<string>,
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[LendingService.LendingServiceListingStructOutput]>;
+    ): Promise<[ServiceListingStructOutput]>;
 
     getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -324,27 +373,39 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<ContractTransaction>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, string, number, BigNumber] & {
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string,
+        string,
+        number,
+        boolean,
+        string
+      ] & {
         id: BigNumber;
+        minAmount: BigNumber;
+        maxAmount: BigNumber;
         minDuration: BigNumber;
         maxDuration: BigNumber;
+        interestRate: BigNumber;
+        loanToValue: BigNumber;
+        loanToValueTokenAddr: string;
         currency: string;
         payBackOption: number;
-        rewardRate: BigNumber;
+        enabled: boolean;
+        name: string;
       }
     >;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    removeListing(
-      currency: PromiseOrValue<string>,
-      listingId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -357,9 +418,8 @@ export interface $TropykusLendingService extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    update(
-      currency: PromiseOrValue<string>,
-      listing: LendingService.LendingServiceListingStruct,
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -380,21 +440,24 @@ export interface $TropykusLendingService extends BaseContract {
   ): Promise<ContractTransaction>;
 
   addListing(
-    minDuration: PromiseOrValue<BigNumberish>,
-    maxDuration: PromiseOrValue<BigNumberish>,
-    currency: PromiseOrValue<string>,
-    payBackOption: PromiseOrValue<BigNumberish>,
-    rewardRate: PromiseOrValue<BigNumberish>,
+    listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getBalance(overrides?: CallOverrides): Promise<BigNumber>;
+  disableListing(
+    listingId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getBalance(
+    currency: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getListing(
-    currency: PromiseOrValue<string>,
     listingId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<LendingService.LendingServiceListingStructOutput>;
+  ): Promise<ServiceListingStructOutput>;
 
   getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -403,27 +466,39 @@ export interface $TropykusLendingService extends BaseContract {
   ): Promise<ContractTransaction>;
 
   listings(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, string, number, BigNumber] & {
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string,
+      string,
+      number,
+      boolean,
+      string
+    ] & {
       id: BigNumber;
+      minAmount: BigNumber;
+      maxAmount: BigNumber;
       minDuration: BigNumber;
       maxDuration: BigNumber;
+      interestRate: BigNumber;
+      loanToValue: BigNumber;
+      loanToValueTokenAddr: string;
       currency: string;
       payBackOption: number;
-      rewardRate: BigNumber;
+      enabled: boolean;
+      name: string;
     }
   >;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  removeListing(
-    currency: PromiseOrValue<string>,
-    listingId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -436,9 +511,8 @@ export interface $TropykusLendingService extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  update(
-    currency: PromiseOrValue<string>,
-    listing: LendingService.LendingServiceListingStruct,
+  updateListing(
+    listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -459,48 +533,63 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<void>;
 
     addListing(
-      minDuration: PromiseOrValue<BigNumberish>,
-      maxDuration: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
-      payBackOption: PromiseOrValue<BigNumberish>,
-      rewardRate: PromiseOrValue<BigNumberish>,
+      listing: ServiceListingStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getListing(
-      currency: PromiseOrValue<string>,
+    disableListing(
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<LendingService.LendingServiceListingStructOutput>;
+    ): Promise<void>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<ServiceListingStructOutput>;
 
     getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     lend(overrides?: CallOverrides): Promise<void>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, string, number, BigNumber] & {
+      [
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string,
+        string,
+        number,
+        boolean,
+        string
+      ] & {
         id: BigNumber;
+        minAmount: BigNumber;
+        maxAmount: BigNumber;
         minDuration: BigNumber;
         maxDuration: BigNumber;
+        interestRate: BigNumber;
+        loanToValue: BigNumber;
+        loanToValueTokenAddr: string;
         currency: string;
         payBackOption: number;
-        rewardRate: BigNumber;
+        enabled: boolean;
+        name: string;
       }
     >;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    removeListing(
-      currency: PromiseOrValue<string>,
-      listingId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -511,9 +600,8 @@ export interface $TropykusLendingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    update(
-      currency: PromiseOrValue<string>,
-      listing: LendingService.LendingServiceListingStruct,
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -521,14 +609,31 @@ export interface $TropykusLendingService extends BaseContract {
   };
 
   filters: {
-    "Lend(address,address,uint256)"(
+    "Borrow(uint256,address,address,uint256,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      borrower?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null,
+      duration?: null
+    ): BorrowEventFilter;
+    Borrow(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      borrower?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null,
+      duration?: null
+    ): BorrowEventFilter;
+
+    "Lend(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       lender?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): LendEventFilter;
     Lend(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       lender?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): LendEventFilter;
 
@@ -550,14 +655,29 @@ export interface $TropykusLendingService extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "Withdraw(address,address,uint256)"(
+    "Pay(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      borrower?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): PayEventFilter;
+    Pay(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      borrower?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): PayEventFilter;
+
+    "Withdraw(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       withdrawer?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): WithdrawEventFilter;
     Withdraw(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       withdrawer?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): WithdrawEventFilter;
   };
@@ -575,18 +695,21 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<BigNumber>;
 
     addListing(
-      minDuration: PromiseOrValue<BigNumberish>,
-      maxDuration: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
-      payBackOption: PromiseOrValue<BigNumberish>,
-      rewardRate: PromiseOrValue<BigNumberish>,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getListing(
-      currency: PromiseOrValue<string>,
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -598,18 +721,11 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<BigNumber>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    removeListing(
-      currency: PromiseOrValue<string>,
-      listingId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -622,9 +738,8 @@ export interface $TropykusLendingService extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    update(
-      currency: PromiseOrValue<string>,
-      listing: LendingService.LendingServiceListingStruct,
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -646,18 +761,21 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     addListing(
-      minDuration: PromiseOrValue<BigNumberish>,
-      maxDuration: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
-      payBackOption: PromiseOrValue<BigNumberish>,
-      rewardRate: PromiseOrValue<BigNumberish>,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getListing(
-      currency: PromiseOrValue<string>,
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -669,18 +787,11 @@ export interface $TropykusLendingService extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    removeListing(
-      currency: PromiseOrValue<string>,
-      listingId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -693,9 +804,8 @@ export interface $TropykusLendingService extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    update(
-      currency: PromiseOrValue<string>,
-      listing: LendingService.LendingServiceListingStruct,
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

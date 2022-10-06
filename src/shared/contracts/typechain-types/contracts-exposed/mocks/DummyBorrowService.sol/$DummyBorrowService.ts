@@ -28,57 +28,72 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export declare namespace BorrowService {
-  export type BorrowServiceListingStruct = {
-    minAmount: PromiseOrValue<BigNumberish>;
-    maxAmount: PromiseOrValue<BigNumberish>;
-    maxDuration: PromiseOrValue<BigNumberish>;
-    interestRate: PromiseOrValue<BigNumberish>;
-    loanToValue: PromiseOrValue<BigNumberish>;
-    loanToValueTokenAddr: PromiseOrValue<string>;
-    currency: PromiseOrValue<string>;
-  };
+export type ServiceListingStruct = {
+  id: PromiseOrValue<BigNumberish>;
+  minAmount: PromiseOrValue<BigNumberish>;
+  maxAmount: PromiseOrValue<BigNumberish>;
+  minDuration: PromiseOrValue<BigNumberish>;
+  maxDuration: PromiseOrValue<BigNumberish>;
+  interestRate: PromiseOrValue<BigNumberish>;
+  loanToValue: PromiseOrValue<BigNumberish>;
+  loanToValueTokenAddr: PromiseOrValue<string>;
+  currency: PromiseOrValue<string>;
+  payBackOption: PromiseOrValue<BigNumberish>;
+  enabled: PromiseOrValue<boolean>;
+  name: PromiseOrValue<string>;
+};
 
-  export type BorrowServiceListingStructOutput = [
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string,
-    string
-  ] & {
-    minAmount: BigNumber;
-    maxAmount: BigNumber;
-    maxDuration: BigNumber;
-    interestRate: BigNumber;
-    loanToValue: BigNumber;
-    loanToValueTokenAddr: string;
-    currency: string;
-  };
-}
+export type ServiceListingStructOutput = [
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  string,
+  string,
+  number,
+  boolean,
+  string
+] & {
+  id: BigNumber;
+  minAmount: BigNumber;
+  maxAmount: BigNumber;
+  minDuration: BigNumber;
+  maxDuration: BigNumber;
+  interestRate: BigNumber;
+  loanToValue: BigNumber;
+  loanToValueTokenAddr: string;
+  currency: string;
+  payBackOption: number;
+  enabled: boolean;
+  name: string;
+};
 
 export interface $DummyBorrowServiceInterface extends utils.Interface {
   functions: {
     "$_checkOwner()": FunctionFragment;
     "$_msgData()": FunctionFragment;
     "$_msgSender()": FunctionFragment;
-    "$_removeLiquidityInternal(uint256,address,uint256)": FunctionFragment;
+    "$_removeLiquidityInternal(uint256,uint256)": FunctionFragment;
     "$_transferOwnership(address)": FunctionFragment;
-    "addLiquidity(uint256,address,uint256)": FunctionFragment;
-    "addListing((uint256,uint256,uint256,uint256,uint256,address,address))": FunctionFragment;
+    "addLiquidity(uint256,uint256)": FunctionFragment;
+    "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "borrow(uint256,address,uint256,uint256)": FunctionFragment;
-    "currentLiquidity(address,uint256)": FunctionFragment;
-    "getListing(address,uint256)": FunctionFragment;
-    "getListingsCount(address)": FunctionFragment;
-    "listings(address,uint256)": FunctionFragment;
+    "currentLiquidity(uint256)": FunctionFragment;
+    "disableListing(uint256)": FunctionFragment;
+    "getBalance(address)": FunctionFragment;
+    "getListing(uint256)": FunctionFragment;
+    "getListingsCount()": FunctionFragment;
+    "listings(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "pay(uint256,address,uint256)": FunctionFragment;
-    "removeLiquidity(uint256,address,uint256)": FunctionFragment;
-    "removeListing(uint256,address)": FunctionFragment;
+    "removeLiquidity(uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
@@ -93,16 +108,18 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
       | "addListing"
       | "borrow"
       | "currentLiquidity"
+      | "disableListing"
+      | "getBalance"
       | "getListing"
       | "getListingsCount"
       | "listings"
       | "owner"
       | "pay"
       | "removeLiquidity"
-      | "removeListing"
       | "renounceOwnership"
       | "serviceType"
       | "transferOwnership"
+      | "updateListing"
       | "withdraw"
   ): FunctionFragment;
 
@@ -117,11 +134,7 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "$_removeLiquidityInternal",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "$_transferOwnership",
@@ -129,15 +142,11 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addLiquidity",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "addListing",
-    values: [BorrowService.BorrowServiceListingStruct]
+    values: [ServiceListingStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "borrow",
@@ -150,19 +159,27 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "currentLiquidity",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getListing",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    functionFragment: "disableListing",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getListingsCount",
+    functionFragment: "getBalance",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getListing",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getListingsCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "listings",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -175,15 +192,7 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "removeLiquidity",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeListing",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -196,6 +205,10 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateListing",
+    values: [ServiceListingStruct]
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
@@ -226,6 +239,11 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
     functionFragment: "currentLiquidity",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "disableListing",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getListingsCount",
@@ -236,10 +254,6 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeLiquidity",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeListing",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -254,27 +268,31 @@ export interface $DummyBorrowServiceInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateListing",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Borrow(uint256,address,address,uint256,uint256)": EventFragment;
-    "ListingCreated(uint256,address,uint256)": EventFragment;
-    "ListingRemoved(uint256,address)": EventFragment;
+    "Lend(uint256,address,address,uint256)": EventFragment;
+    "ListingCreated(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Pay(uint256,address,address,uint256)": EventFragment;
-    "Withdraw(address,address,uint256)": EventFragment;
+    "Withdraw(uint256,address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Borrow"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Lend"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ListingCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ListingRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Pay"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
 
 export interface BorrowEventObject {
-  index: BigNumber;
+  listingId: BigNumber;
   borrower: string;
   currency: string;
   amount: BigNumber;
@@ -287,28 +305,29 @@ export type BorrowEvent = TypedEvent<
 
 export type BorrowEventFilter = TypedEventFilter<BorrowEvent>;
 
-export interface ListingCreatedEventObject {
-  index: BigNumber;
+export interface LendEventObject {
+  listingId: BigNumber;
+  lender: string;
   currency: string;
-  interestRate: BigNumber;
+  amount: BigNumber;
+}
+export type LendEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber],
+  LendEventObject
+>;
+
+export type LendEventFilter = TypedEventFilter<LendEvent>;
+
+export interface ListingCreatedEventObject {
+  currency: string;
+  listingId: BigNumber;
 }
 export type ListingCreatedEvent = TypedEvent<
-  [BigNumber, string, BigNumber],
+  [string, BigNumber],
   ListingCreatedEventObject
 >;
 
 export type ListingCreatedEventFilter = TypedEventFilter<ListingCreatedEvent>;
-
-export interface ListingRemovedEventObject {
-  index: BigNumber;
-  currency: string;
-}
-export type ListingRemovedEvent = TypedEvent<
-  [BigNumber, string],
-  ListingRemovedEventObject
->;
-
-export type ListingRemovedEventFilter = TypedEventFilter<ListingRemovedEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -323,7 +342,7 @@ export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface PayEventObject {
-  index: BigNumber;
+  listingId: BigNumber;
   borrower: string;
   currency: string;
   amount: BigNumber;
@@ -336,12 +355,13 @@ export type PayEvent = TypedEvent<
 export type PayEventFilter = TypedEventFilter<PayEvent>;
 
 export interface WithdrawEventObject {
+  listingId: BigNumber;
   withdrawer: string;
   currency: string;
   amount: BigNumber;
 }
 export type WithdrawEvent = TypedEvent<
-  [string, string, BigNumber],
+  [BigNumber, string, string, BigNumber],
   WithdrawEventObject
 >;
 
@@ -382,7 +402,6 @@ export interface $DummyBorrowService extends BaseContract {
 
     $_removeLiquidityInternal(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -394,13 +413,12 @@ export interface $DummyBorrowService extends BaseContract {
 
     addLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     addListing(
-      listing: BorrowService.BorrowServiceListingStruct,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -413,29 +431,29 @@ export interface $DummyBorrowService extends BaseContract {
     ): Promise<ContractTransaction>;
 
     currentLiquidity(
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { liquidity: BigNumber }>;
 
-    getListing(
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getBalance(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getListing(
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<
-      [BorrowService.BorrowServiceListingStructOutput] & {
-        listing: BorrowService.BorrowServiceListingStructOutput;
-      }
-    >;
+    ): Promise<[ServiceListingStructOutput]>;
 
-    getListingsCount(
-      currency: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { count: BigNumber }>;
+    getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -444,16 +462,26 @@ export interface $DummyBorrowService extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
+        BigNumber,
         string,
+        string,
+        number,
+        boolean,
         string
       ] & {
+        id: BigNumber;
         minAmount: BigNumber;
         maxAmount: BigNumber;
+        minDuration: BigNumber;
         maxDuration: BigNumber;
         interestRate: BigNumber;
         loanToValue: BigNumber;
         loanToValueTokenAddr: string;
         currency: string;
+        payBackOption: number;
+        enabled: boolean;
+        name: string;
       }
     >;
 
@@ -468,14 +496,7 @@ export interface $DummyBorrowService extends BaseContract {
 
     removeLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    removeListing(
-      index: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -487,6 +508,11 @@ export interface $DummyBorrowService extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -503,7 +529,6 @@ export interface $DummyBorrowService extends BaseContract {
 
   $_removeLiquidityInternal(
     amount: PromiseOrValue<BigNumberish>,
-    currency: PromiseOrValue<string>,
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -515,13 +540,12 @@ export interface $DummyBorrowService extends BaseContract {
 
   addLiquidity(
     amount: PromiseOrValue<BigNumberish>,
-    currency: PromiseOrValue<string>,
     index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   addListing(
-    listing: BorrowService.BorrowServiceListingStruct,
+    listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -534,35 +558,57 @@ export interface $DummyBorrowService extends BaseContract {
   ): Promise<ContractTransaction>;
 
   currentLiquidity(
-    currency: PromiseOrValue<string>,
     index: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getListing(
-    currency: PromiseOrValue<string>,
+  disableListing(
     listingId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BorrowService.BorrowServiceListingStructOutput>;
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getListingsCount(
+  getBalance(
     currency: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getListing(
+    listingId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<ServiceListingStructOutput>;
+
+  getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
+
   listings(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, string, string] & {
+    [
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string,
+      string,
+      number,
+      boolean,
+      string
+    ] & {
+      id: BigNumber;
       minAmount: BigNumber;
       maxAmount: BigNumber;
+      minDuration: BigNumber;
       maxDuration: BigNumber;
       interestRate: BigNumber;
       loanToValue: BigNumber;
       loanToValueTokenAddr: string;
       currency: string;
+      payBackOption: number;
+      enabled: boolean;
+      name: string;
     }
   >;
 
@@ -577,14 +623,7 @@ export interface $DummyBorrowService extends BaseContract {
 
   removeLiquidity(
     amount: PromiseOrValue<BigNumberish>,
-    currency: PromiseOrValue<string>,
     index: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  removeListing(
-    index: PromiseOrValue<BigNumberish>,
-    currency: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -596,6 +635,11 @@ export interface $DummyBorrowService extends BaseContract {
 
   transferOwnership(
     newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  updateListing(
+    listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -612,7 +656,6 @@ export interface $DummyBorrowService extends BaseContract {
 
     $_removeLiquidityInternal(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -624,13 +667,12 @@ export interface $DummyBorrowService extends BaseContract {
 
     addLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     addListing(
-      listing: BorrowService.BorrowServiceListingStruct,
+      listing: ServiceListingStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -643,25 +685,29 @@ export interface $DummyBorrowService extends BaseContract {
     ): Promise<void>;
 
     currentLiquidity(
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getListing(
-      currency: PromiseOrValue<string>,
+    disableListing(
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<BorrowService.BorrowServiceListingStructOutput>;
+    ): Promise<void>;
 
-    getListingsCount(
+    getBalance(
       currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<ServiceListingStructOutput>;
+
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
+
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -670,16 +716,26 @@ export interface $DummyBorrowService extends BaseContract {
         BigNumber,
         BigNumber,
         BigNumber,
+        BigNumber,
+        BigNumber,
         string,
+        string,
+        number,
+        boolean,
         string
       ] & {
+        id: BigNumber;
         minAmount: BigNumber;
         maxAmount: BigNumber;
+        minDuration: BigNumber;
         maxDuration: BigNumber;
         interestRate: BigNumber;
         loanToValue: BigNumber;
         loanToValueTokenAddr: string;
         currency: string;
+        payBackOption: number;
+        enabled: boolean;
+        name: string;
       }
     >;
 
@@ -694,14 +750,7 @@ export interface $DummyBorrowService extends BaseContract {
 
     removeLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    removeListing(
-      index: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -714,44 +763,51 @@ export interface $DummyBorrowService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    updateListing(
+      listing: ServiceListingStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     withdraw(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
     "Borrow(uint256,address,address,uint256,uint256)"(
-      index?: PromiseOrValue<BigNumberish> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null,
       borrower?: PromiseOrValue<string> | null,
       currency?: PromiseOrValue<string> | null,
       amount?: null,
       duration?: null
     ): BorrowEventFilter;
     Borrow(
-      index?: PromiseOrValue<BigNumberish> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null,
       borrower?: PromiseOrValue<string> | null,
       currency?: PromiseOrValue<string> | null,
       amount?: null,
       duration?: null
     ): BorrowEventFilter;
 
-    "ListingCreated(uint256,address,uint256)"(
-      index?: PromiseOrValue<BigNumberish> | null,
+    "Lend(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      lender?: PromiseOrValue<string> | null,
       currency?: PromiseOrValue<string> | null,
-      interestRate?: PromiseOrValue<BigNumberish> | null
+      amount?: null
+    ): LendEventFilter;
+    Lend(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      lender?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): LendEventFilter;
+
+    "ListingCreated(address,uint256)"(
+      currency?: PromiseOrValue<string> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null
     ): ListingCreatedEventFilter;
     ListingCreated(
-      index?: PromiseOrValue<BigNumberish> | null,
       currency?: PromiseOrValue<string> | null,
-      interestRate?: PromiseOrValue<BigNumberish> | null
+      listingId?: PromiseOrValue<BigNumberish> | null
     ): ListingCreatedEventFilter;
-
-    "ListingRemoved(uint256,address)"(
-      index?: PromiseOrValue<BigNumberish> | null,
-      currency?: PromiseOrValue<string> | null
-    ): ListingRemovedEventFilter;
-    ListingRemoved(
-      index?: PromiseOrValue<BigNumberish> | null,
-      currency?: PromiseOrValue<string> | null
-    ): ListingRemovedEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -763,26 +819,28 @@ export interface $DummyBorrowService extends BaseContract {
     ): OwnershipTransferredEventFilter;
 
     "Pay(uint256,address,address,uint256)"(
-      index?: PromiseOrValue<BigNumberish> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null,
       borrower?: PromiseOrValue<string> | null,
       currency?: PromiseOrValue<string> | null,
       amount?: null
     ): PayEventFilter;
     Pay(
-      index?: PromiseOrValue<BigNumberish> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null,
       borrower?: PromiseOrValue<string> | null,
       currency?: PromiseOrValue<string> | null,
       amount?: null
     ): PayEventFilter;
 
-    "Withdraw(address,address,uint256)"(
+    "Withdraw(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       withdrawer?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): WithdrawEventFilter;
     Withdraw(
+      listingId?: PromiseOrValue<BigNumberish> | null,
       withdrawer?: PromiseOrValue<string> | null,
-      currency?: null,
+      currency?: PromiseOrValue<string> | null,
       amount?: null
     ): WithdrawEventFilter;
   };
@@ -796,7 +854,6 @@ export interface $DummyBorrowService extends BaseContract {
 
     $_removeLiquidityInternal(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -808,13 +865,12 @@ export interface $DummyBorrowService extends BaseContract {
 
     addLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     addListing(
-      listing: BorrowService.BorrowServiceListingStruct,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -827,25 +883,29 @@ export interface $DummyBorrowService extends BaseContract {
     ): Promise<BigNumber>;
 
     currentLiquidity(
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getListing(
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getBalance(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListing(
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getListingsCount(
-      currency: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -860,14 +920,7 @@ export interface $DummyBorrowService extends BaseContract {
 
     removeLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    removeListing(
-      index: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -879,6 +932,11 @@ export interface $DummyBorrowService extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -896,7 +954,6 @@ export interface $DummyBorrowService extends BaseContract {
 
     $_removeLiquidityInternal(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -908,13 +965,12 @@ export interface $DummyBorrowService extends BaseContract {
 
     addLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     addListing(
-      listing: BorrowService.BorrowServiceListingStruct,
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -927,25 +983,29 @@ export interface $DummyBorrowService extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     currentLiquidity(
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getListing(
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getBalance(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getListing(
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getListingsCount(
-      currency: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getListingsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     listings(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -960,14 +1020,7 @@ export interface $DummyBorrowService extends BaseContract {
 
     removeLiquidity(
       amount: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    removeListing(
-      index: PromiseOrValue<BigNumberish>,
-      currency: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -979,6 +1032,11 @@ export interface $DummyBorrowService extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -35,6 +35,8 @@ export interface ACMEInterface extends utils.Interface {
     "getBalance()": FunctionFragment;
     "getBalance(address)": FunctionFragment;
     "getCetCollateralFactor(address)": FunctionFragment;
+    "getDebtBalance(address)": FunctionFragment;
+    "getDebtBalance(address,address)": FunctionFragment;
     "loan(address,uint256)": FunctionFragment;
     "loan(address,uint256,address)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -54,6 +56,8 @@ export interface ACMEInterface extends utils.Interface {
       | "getBalance()"
       | "getBalance(address)"
       | "getCetCollateralFactor"
+      | "getDebtBalance(address)"
+      | "getDebtBalance(address,address)"
       | "loan(address,uint256)"
       | "loan(address,uint256,address)"
       | "owner"
@@ -82,6 +86,14 @@ export interface ACMEInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getCetCollateralFactor",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDebtBalance(address)",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDebtBalance(address,address)",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "loan(address,uint256)",
@@ -149,6 +161,14 @@ export interface ACMEInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCetCollateralFactor",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDebtBalance(address)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDebtBalance(address,address)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -326,6 +346,17 @@ export interface ACME extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    "getDebtBalance(address)"(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "getDebtBalance(address,address)"(
+      currency: PromiseOrValue<string>,
+      loaner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     "loan(address,uint256)"(
       currency: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -410,6 +441,17 @@ export interface ACME extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  "getDebtBalance(address)"(
+    currency: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getDebtBalance(address,address)"(
+    currency: PromiseOrValue<string>,
+    loaner: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   "loan(address,uint256)"(
     currency: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
@@ -489,6 +531,17 @@ export interface ACME extends BaseContract {
 
     getCetCollateralFactor(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getDebtBalance(address)"(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getDebtBalance(address,address)"(
+      currency: PromiseOrValue<string>,
+      loaner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -623,6 +676,17 @@ export interface ACME extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    "getDebtBalance(address)"(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getDebtBalance(address,address)"(
+      currency: PromiseOrValue<string>,
+      loaner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     "loan(address,uint256)"(
       currency: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
@@ -699,6 +763,17 @@ export interface ACME extends BaseContract {
 
     getCetCollateralFactor(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDebtBalance(address)"(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getDebtBalance(address,address)"(
+      currency: PromiseOrValue<string>,
+      loaner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

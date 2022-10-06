@@ -26,12 +26,55 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "uint256",
+        name: "listingId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "borrower",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "currency",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "duration",
+        type: "uint256",
+      },
+    ],
+    name: "Borrow",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "listingId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
         internalType: "address",
         name: "lender",
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "address",
         name: "currency",
         type: "address",
@@ -89,12 +132,49 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "uint256",
+        name: "listingId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "borrower",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "currency",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Pay",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "listingId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
         internalType: "address",
         name: "withdrawer",
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "address",
         name: "currency",
         type: "address",
@@ -112,29 +192,71 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "minDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "maxDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "currency",
-        type: "address",
-      },
-      {
-        internalType: "enum LendingService.PayBackOption",
-        name: "payBackOption",
-        type: "uint8",
-      },
-      {
-        internalType: "uint256",
-        name: "rewardRate",
-        type: "uint256",
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minDuration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxDuration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "interestRate",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "loanToValue",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "loanToValueTokenAddr",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "currency",
+            type: "address",
+          },
+          {
+            internalType: "enum PayBackOption",
+            name: "payBackOption",
+            type: "uint8",
+          },
+          {
+            internalType: "bool",
+            name: "enabled",
+            type: "bool",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+        ],
+        internalType: "struct ServiceListing",
+        name: "listing",
+        type: "tuple",
       },
     ],
     name: "addListing",
@@ -149,15 +271,15 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getBalance",
-    outputs: [
+    inputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "listingId",
         type: "uint256",
       },
     ],
+    name: "disableListing",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -168,6 +290,20 @@ const _abi = [
         name: "currency",
         type: "address",
       },
+    ],
+    name: "getBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         internalType: "uint256",
         name: "listingId",
@@ -185,6 +321,16 @@ const _abi = [
           },
           {
             internalType: "uint256",
+            name: "minAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
             name: "minDuration",
             type: "uint256",
           },
@@ -194,22 +340,42 @@ const _abi = [
             type: "uint256",
           },
           {
+            internalType: "uint256",
+            name: "interestRate",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "loanToValue",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "loanToValueTokenAddr",
+            type: "address",
+          },
+          {
             internalType: "address",
             name: "currency",
             type: "address",
           },
           {
-            internalType: "enum LendingService.PayBackOption",
+            internalType: "enum PayBackOption",
             name: "payBackOption",
             type: "uint8",
           },
           {
-            internalType: "uint256",
-            name: "rewardRate",
-            type: "uint256",
+            internalType: "bool",
+            name: "enabled",
+            type: "bool",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
           },
         ],
-        internalType: "struct LendingService.LendingServiceListing",
+        internalType: "struct ServiceListing",
         name: "",
         type: "tuple",
       },
@@ -240,11 +406,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "",
         type: "uint256",
@@ -259,6 +420,16 @@ const _abi = [
       },
       {
         internalType: "uint256",
+        name: "minAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "maxAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
         name: "minDuration",
         type: "uint256",
       },
@@ -268,19 +439,39 @@ const _abi = [
         type: "uint256",
       },
       {
+        internalType: "uint256",
+        name: "interestRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanToValue",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "loanToValueTokenAddr",
+        type: "address",
+      },
+      {
         internalType: "address",
         name: "currency",
         type: "address",
       },
       {
-        internalType: "enum LendingService.PayBackOption",
+        internalType: "enum PayBackOption",
         name: "payBackOption",
         type: "uint8",
       },
       {
-        internalType: "uint256",
-        name: "rewardRate",
-        type: "uint256",
+        internalType: "bool",
+        name: "enabled",
+        type: "bool",
+      },
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -300,24 +491,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "currency",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "listingId",
-        type: "uint256",
-      },
-    ],
-    name: "removeListing",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
@@ -329,7 +502,7 @@ const _abi = [
     name: "serviceType",
     outputs: [
       {
-        internalType: "enum Service.ServiceType",
+        internalType: "enum ServiceType",
         name: "",
         type: "uint8",
       },
@@ -353,15 +526,20 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "currency",
-        type: "address",
-      },
-      {
         components: [
           {
             internalType: "uint256",
             name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxAmount",
             type: "uint256",
           },
           {
@@ -375,27 +553,47 @@ const _abi = [
             type: "uint256",
           },
           {
+            internalType: "uint256",
+            name: "interestRate",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "loanToValue",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "loanToValueTokenAddr",
+            type: "address",
+          },
+          {
             internalType: "address",
             name: "currency",
             type: "address",
           },
           {
-            internalType: "enum LendingService.PayBackOption",
+            internalType: "enum PayBackOption",
             name: "payBackOption",
             type: "uint8",
           },
           {
-            internalType: "uint256",
-            name: "rewardRate",
-            type: "uint256",
+            internalType: "bool",
+            name: "enabled",
+            type: "bool",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
           },
         ],
-        internalType: "struct LendingService.LendingServiceListing",
+        internalType: "struct ServiceListing",
         name: "listing",
         type: "tuple",
       },
     ],
-    name: "update",
+    name: "updateListing",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

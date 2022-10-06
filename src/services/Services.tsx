@@ -37,7 +37,7 @@ const Services = () => {
         const borrowServices = servicesWithType.filter(({ serviceType }) => serviceType === ServiceTypes.Borrowing).map(({ service }) => getBorrowService(signer, service.address))
 
 
-        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as BorrowServiceListing[];
+        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as BorrowServiceListing[]
 
         const listingObjects = listings.map((listing, index) => ({
           serviceProviderName: 'ACME',
@@ -59,7 +59,7 @@ const Services = () => {
 
       const promises = historicServices.map(async (service: RIFService) => {
         const lendingService = getLendingService(signer, service.listingAddress)
-        const balance = await lendingService.getBalance()
+        const balance = await lendingService.getBalance(ethers.constants.AddressZero)
         service.balance = +balance / 1e18
 
         return service
@@ -105,7 +105,7 @@ const Services = () => {
     await authorizeServiceProvider(listingAddress)
     await (await lendingService.lend({ value })).wait()
 
-    const balanceLent = await lendingService.getBalance()
+    const balanceLent = await lendingService.getBalance(ethers.constants.AddressZero)
     serviceItem.balance = (+balanceLent / 1e18)
 
     const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
@@ -191,11 +191,11 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
     </Row>
   )
 }
-async function getListings(service: LendingService | BorrowService) {
-  const listingsCount = await service.getListingsCount(process.env.REACT_APP_DOC_ADDRESS!)
+async function getListings (service: LendingService | BorrowService) {
+  const listingsCount = await service.getListingsCount()
   const promises = []
   for (let i = 0; i < +listingsCount; i++) {
-    promises.push(service.getListing(ethers.constants.AddressZero, BigNumber.from(i)))
+    promises.push(service.getListing(BigNumber.from(i)))
   }
   const listings = await Promise.all(promises)
   return listings
