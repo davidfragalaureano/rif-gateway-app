@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-import { BorrowServiceListing, RIFService, ServiceItemProps, ServiceTypes } from './types'
+import { ServiceListing, RIFService, ServiceItemProps, ServiceTypes } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
-import { getProviders, getLendingService, getUserIdentityFactory, getService, getBorrowService, LendingService, BorrowService } from '../shared/contracts'
+import {
+  getProviders,
+  getLendingService,
+  getUserIdentityFactory,
+  getService,
+  getBorrowService,
+  LendingService,
+  BorrowService,
+  getTropykusBorrowService
+} from '../shared/contracts'
 import { BigNumber, ethers } from 'ethers'
 
 const SERVICE_KEY = 'SERVICES'
@@ -34,18 +43,17 @@ const Services = () => {
         const servicesAddresses = await Providers.getServices()
         const services = servicesAddresses.map(address => getService(signer, address))
         const servicesWithType = await Promise.all(services.map(async (service) => { return { serviceType: await service.serviceType(), service: service } }))
-        const borrowServices = servicesWithType.filter(({ serviceType }) => serviceType === ServiceTypes.Borrowing).map(({ service }) => getBorrowService(signer, service.address))
+        const borrowServices = servicesWithType.filter(({ serviceType }) => serviceType === ServiceTypes.Borrowing).map(({ service }) => getTropykusBorrowService(signer, service.address))
 
-
-        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as BorrowServiceListing[]
+        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as ServiceListing[]
 
         const listingObjects = listings.map((listing, index) => ({
-          serviceProviderName: 'Tropykus',
-          listingAddress: servicesAddresses[0],
+          serviceProviderName: listing.name,
+          listingAddress: servicesAddresses[1], // TODO: to specify service provider address tropykusBorrow
           listingName: 'Borrow Service',
           balance: 0,
-          apy: +listing.interestRate,
-          id: index,
+          apy: +listing.interestRate / 1e18 * 100,
+          id: +listing.id,
           used: false
         }))
 
@@ -58,8 +66,9 @@ const Services = () => {
       if (!signer || !account) return
 
       const promises = historicServices.map(async (service: RIFService) => {
-        const lendingService = getLendingService(signer, service.listingAddress)
-        const balance = await lendingService.getBalance(ethers.constants.AddressZero)
+        // const lendingService = getLendingService(signer, service.listingAddress)
+        const borrowingService = getTropykusBorrowService(signer, service.listingAddress)
+        const balance = await borrowingService.getBalance(ethers.constants.AddressZero)
         service.balance = +balance / 1e18
 
         return service
@@ -76,6 +85,7 @@ const Services = () => {
     if (!signer || !account) return
 
     const identityFactory = getUserIdentityFactory(signer)
+    console.log('identityFactory', identityFactory.address)
 
     await (await identityFactory.authorize(serviceAddr, true)).wait()
   }
@@ -97,15 +107,36 @@ const Services = () => {
 
   const consumeService = async (serviceItem: ServiceItemProps) => {
     if (!signer || !account) return
+    const amounToBorrow = 100
 
     const { id: consumedServiceId, listingAddress } = serviceItem
-    const value = ethers.utils.parseEther('50')
-    const lendingService = getLendingService(signer, listingAddress)
+    const value = ethers.utils.parseEther(amounToBorrow.toString())
+    console.log('value', +value / 1e18)
+    const borrowingService = getTropykusBorrowService(signer, listingAddress)
+    console.log('borrowingService', borrowingService)
+    console.log('borrowingService', borrowingService.address)
 
+    console.log('authorizing..')
     await authorizeServiceProvider(listingAddress)
-    await (await lendingService.lend({ value })).wait()
+    console.log('authorize done..')
 
-    const balanceLent = await lendingService.getBalance(ethers.constants.AddressZero)
+    console.log('creating user identity...')
+    await (await borrowingService.connect(signer).createIdentity()).wait()
+    const currency = process.env.REACT_APP_DOC_ADDRESS || ethers.constants.AddressZero
+    console.log('currency', currency)
+    const amountToLend = await borrowingService.connect(signer).calculateAmountToLend(value)
+    console.log('amountToLend', +amountToLend / 1e18)
+    console.log('borrowing')
+    await (await borrowingService.borrow(
+      value,
+      currency,
+      serviceItem.id,
+      0,
+      { value: amountToLend }
+    )).wait()
+
+    console.log('borrow done...')
+    const balanceLent = await borrowingService.getBalance(ethers.constants.AddressZero)
     serviceItem.balance = (+balanceLent / 1e18)
 
     const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
@@ -200,4 +231,3 @@ async function getListings (service: LendingService | BorrowService) {
   const listings = await Promise.all(promises)
   return listings
 }
-

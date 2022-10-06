@@ -36,3 +36,18 @@ export type BorrowServiceListing = {
     loanToValueTokenAddr: string;
     currency: string;
 }
+
+export type ServiceListing = {
+    id: BigNumber;
+    minAmount: BigNumber;
+    maxAmount: BigNumber;
+    minDuration: BigNumber;
+    maxDuration: BigNumber;
+    interestRate: BigNumber;
+    loanToValue: BigNumber;
+    loanToValueTokenAddr: string;
+    currency: string;
+    payBackOption: number;
+    enabled: boolean;
+    name: string;
+}
