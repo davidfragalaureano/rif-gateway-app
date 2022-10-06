@@ -9,7 +9,6 @@ import {
   getLendingService,
   getUserIdentityFactory,
   getService,
-  getBorrowService,
   LendingService,
   BorrowService,
   getTropykusBorrowService
