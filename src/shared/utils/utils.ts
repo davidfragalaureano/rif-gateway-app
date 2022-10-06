@@ -8,7 +8,8 @@ export const NetworkExplorer = {
   [ENetwork.NotSupported]: null,
   [ENetwork.RSKMainnet]: 'https://explorer.rsk.co/',
   [ENetwork.RSKTestnet]: 'https://explorer.testnet.rsk.co/',
-  [ENetwork.Ganache]: 'http://127.0.0.1:8545/'
+  [ENetwork.Ganache]: 'http://127.0.0.1:8545/',
+  [ENetwork.Hardhat]: 'http://127.0.0.1:8545/'
 }
 
 export function shortAddress (address?: string): string {

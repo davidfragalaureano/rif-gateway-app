@@ -89,14 +89,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BorrowService__factory>;
     getContractFactory(
-      name: "LendingService",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.LendingService__factory>;
-    getContractFactory(
-      name: "Providers",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Providers__factory>;
-    getContractFactory(
       name: "IBorrowService",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IBorrowService__factory>;
@@ -108,6 +100,14 @@ declare module "hardhat/types/runtime" {
       name: "IService",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IService__factory>;
+    getContractFactory(
+      name: "LendingService",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LendingService__factory>;
+    getContractFactory(
+      name: "Providers",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Providers__factory>;
     getContractFactory(
       name: "Service",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -237,16 +237,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.BorrowService>;
     getContractAt(
-      name: "LendingService",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.LendingService>;
-    getContractAt(
-      name: "Providers",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Providers>;
-    getContractAt(
       name: "IBorrowService",
       address: string,
       signer?: ethers.Signer
@@ -261,6 +251,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IService>;
+    getContractAt(
+      name: "LendingService",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LendingService>;
+    getContractAt(
+      name: "Providers",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Providers>;
     getContractAt(
       name: "Service",
       address: string,

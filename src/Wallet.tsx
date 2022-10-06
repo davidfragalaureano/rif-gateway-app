@@ -10,7 +10,8 @@ const NETWORK_DESCRIPTION = {
   [ENetwork.NotSupported]: 'Not supported',
   [ENetwork.RSKMainnet]: 'RSK Mainnet',
   [ENetwork.RSKTestnet]: 'RSK Testnet',
-  [ENetwork.Ganache]: 'Ganache'
+  [ENetwork.Ganache]: 'Ganache',
+  [ENetwork.Hardhat]: 'Hardhat'
 }
 
 const Wallet = () => {

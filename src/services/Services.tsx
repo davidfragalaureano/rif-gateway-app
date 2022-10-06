@@ -40,9 +40,9 @@ const Services = () => {
         const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as BorrowServiceListing[]
 
         const listingObjects = listings.map((listing, index) => ({
-          serviceProviderName: 'ACME',
+          serviceProviderName: 'Tropykus',
           listingAddress: servicesAddresses[0],
-          listingName: 'Lending Service',
+          listingName: 'Borrow Service',
           balance: 0,
           apy: +listing.interestRate,
           id: index,

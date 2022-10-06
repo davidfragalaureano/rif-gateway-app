@@ -25,7 +25,7 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from "../../common";
 
 export type ServiceListingStruct = {
   id: PromiseOrValue<BigNumberish>;
@@ -70,18 +70,13 @@ export type ServiceListingStructOutput = [
   name: string;
 };
 
-export interface ServiceInterface extends utils.Interface {
+export interface IServiceInterface extends utils.Interface {
   functions: {
     "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "disableListing(uint256)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
     "getListing(uint256)": FunctionFragment;
     "getListingsCount()": FunctionFragment;
-    "listings(uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "serviceType()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
     "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
   };
 
@@ -92,11 +87,6 @@ export interface ServiceInterface extends utils.Interface {
       | "getBalance"
       | "getListing"
       | "getListingsCount"
-      | "listings"
-      | "owner"
-      | "renounceOwnership"
-      | "serviceType"
-      | "transferOwnership"
       | "updateListing"
   ): FunctionFragment;
 
@@ -121,23 +111,6 @@ export interface ServiceInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "listings",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "serviceType",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateListing",
     values: [ServiceListingStruct]
   ): string;
@@ -153,20 +126,6 @@ export interface ServiceInterface extends utils.Interface {
     functionFragment: "getListingsCount",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "listings", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "serviceType",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "updateListing",
     data: BytesLike
@@ -176,7 +135,6 @@ export interface ServiceInterface extends utils.Interface {
     "Borrow(uint256,address,address,uint256,uint256)": EventFragment;
     "Lend(uint256,address,address,uint256)": EventFragment;
     "ListingCreated(address,uint256)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
     "Pay(uint256,address,address,uint256)": EventFragment;
     "Withdraw(uint256,address,address,uint256)": EventFragment;
   };
@@ -184,7 +142,6 @@ export interface ServiceInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Borrow"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Lend"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ListingCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Pay"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
@@ -227,18 +184,6 @@ export type ListingCreatedEvent = TypedEvent<
 
 export type ListingCreatedEventFilter = TypedEventFilter<ListingCreatedEvent>;
 
-export interface OwnershipTransferredEventObject {
-  previousOwner: string;
-  newOwner: string;
-}
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string],
-  OwnershipTransferredEventObject
->;
-
-export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>;
-
 export interface PayEventObject {
   listingId: BigNumber;
   borrower: string;
@@ -265,12 +210,12 @@ export type WithdrawEvent = TypedEvent<
 
 export type WithdrawEventFilter = TypedEventFilter<WithdrawEvent>;
 
-export interface Service extends BaseContract {
+export interface IService extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ServiceInterface;
+  interface: IServiceInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -314,52 +259,6 @@ export interface Service extends BaseContract {
 
     getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    listings(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        number,
-        boolean,
-        string
-      ] & {
-        id: BigNumber;
-        minAmount: BigNumber;
-        maxAmount: BigNumber;
-        minDuration: BigNumber;
-        maxDuration: BigNumber;
-        interestRate: BigNumber;
-        loanToValue: BigNumber;
-        loanToValueTokenAddr: string;
-        currency: string;
-        payBackOption: number;
-        enabled: boolean;
-        name: string;
-      }
-    >;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    serviceType(overrides?: CallOverrides): Promise<[number]>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     updateListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -388,52 +287,6 @@ export interface Service extends BaseContract {
 
   getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  listings(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      string,
-      string,
-      number,
-      boolean,
-      string
-    ] & {
-      id: BigNumber;
-      minAmount: BigNumber;
-      maxAmount: BigNumber;
-      minDuration: BigNumber;
-      maxDuration: BigNumber;
-      interestRate: BigNumber;
-      loanToValue: BigNumber;
-      loanToValueTokenAddr: string;
-      currency: string;
-      payBackOption: number;
-      enabled: boolean;
-      name: string;
-    }
-  >;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  renounceOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  serviceType(overrides?: CallOverrides): Promise<number>;
-
-  transferOwnership(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   updateListing(
     listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -461,50 +314,6 @@ export interface Service extends BaseContract {
     ): Promise<ServiceListingStructOutput>;
 
     getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    listings(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        number,
-        boolean,
-        string
-      ] & {
-        id: BigNumber;
-        minAmount: BigNumber;
-        maxAmount: BigNumber;
-        minDuration: BigNumber;
-        maxDuration: BigNumber;
-        interestRate: BigNumber;
-        loanToValue: BigNumber;
-        loanToValueTokenAddr: string;
-        currency: string;
-        payBackOption: number;
-        enabled: boolean;
-        name: string;
-      }
-    >;
-
-    owner(overrides?: CallOverrides): Promise<string>;
-
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    serviceType(overrides?: CallOverrides): Promise<number>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     updateListing(
       listing: ServiceListingStruct,
@@ -549,15 +358,6 @@ export interface Service extends BaseContract {
       currency?: PromiseOrValue<string> | null,
       listingId?: PromiseOrValue<BigNumberish> | null
     ): ListingCreatedEventFilter;
-
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
-    OwnershipTransferred(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
 
     "Pay(uint256,address,address,uint256)"(
       listingId?: PromiseOrValue<BigNumberish> | null,
@@ -609,24 +409,6 @@ export interface Service extends BaseContract {
 
     getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    listings(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    serviceType(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     updateListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -655,24 +437,6 @@ export interface Service extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getListingsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    listings(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    serviceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
 
     updateListing(
       listing: ServiceListingStruct,

@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  IService,
-  IServiceInterface,
-} from "../../../../contracts/services/Service.sol/IService";
+  $IService,
+  $IServiceInterface,
+} from "../../../../contracts-exposed/services/IService.sol/$IService";
 
 const _abi = [
   {
@@ -443,15 +443,15 @@ const _abi = [
   },
 ];
 
-export class IService__factory {
+export class $IService__factory {
   static readonly abi = _abi;
-  static createInterface(): IServiceInterface {
-    return new utils.Interface(_abi) as IServiceInterface;
+  static createInterface(): $IServiceInterface {
+    return new utils.Interface(_abi) as $IServiceInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IService {
-    return new Contract(address, _abi, signerOrProvider) as IService;
+  ): $IService {
+    return new Contract(address, _abi, signerOrProvider) as $IService;
   }
 }

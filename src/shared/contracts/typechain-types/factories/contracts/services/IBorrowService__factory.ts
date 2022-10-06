@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  $IBorrowService,
-  $IBorrowServiceInterface,
-} from "../../../../contracts-exposed/services/Service.sol/$IBorrowService";
+  IBorrowService,
+  IBorrowServiceInterface,
+} from "../../../contracts/services/IBorrowService";
 
 const _abi = [
   {
@@ -63,15 +63,15 @@ const _abi = [
   },
 ];
 
-export class $IBorrowService__factory {
+export class IBorrowService__factory {
   static readonly abi = _abi;
-  static createInterface(): $IBorrowServiceInterface {
-    return new utils.Interface(_abi) as $IBorrowServiceInterface;
+  static createInterface(): IBorrowServiceInterface {
+    return new utils.Interface(_abi) as IBorrowServiceInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): $IBorrowService {
-    return new Contract(address, _abi, signerOrProvider) as $IBorrowService;
+  ): IBorrowService {
+    return new Contract(address, _abi, signerOrProvider) as IBorrowService;
   }
 }

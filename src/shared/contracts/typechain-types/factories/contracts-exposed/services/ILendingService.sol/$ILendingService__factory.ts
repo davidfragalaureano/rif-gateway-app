@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  ILendingService,
-  ILendingServiceInterface,
-} from "../../../../contracts/services/Service.sol/ILendingService";
+  $ILendingService,
+  $ILendingServiceInterface,
+} from "../../../../contracts-exposed/services/ILendingService.sol/$ILendingService";
 
 const _abi = [
   {
@@ -26,15 +26,15 @@ const _abi = [
   },
 ];
 
-export class ILendingService__factory {
+export class $ILendingService__factory {
   static readonly abi = _abi;
-  static createInterface(): ILendingServiceInterface {
-    return new utils.Interface(_abi) as ILendingServiceInterface;
+  static createInterface(): $ILendingServiceInterface {
+    return new utils.Interface(_abi) as $ILendingServiceInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): ILendingService {
-    return new Contract(address, _abi, signerOrProvider) as ILendingService;
+  ): $ILendingService {
+    return new Contract(address, _abi, signerOrProvider) as $ILendingService;
   }
 }
