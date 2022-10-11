@@ -10,44 +10,32 @@ export type RIFService = {
     used: boolean
 }
 
-export type ServiceItemProps = {
-    serviceProviderName: string,
-    listingName: string,
-    listingAddress: string,
-    available: boolean,
-    balance: number,
-    apy: number,
-    id: number,
-    used: boolean,
-    onClickHandler: Function
+export type ServiceItemProps = ServiceListing & {
+    available: boolean;
+    onClickHandler: Function;
 }
 
-export enum ServiceTypes {
+export enum ServiceType {
     Lending,
     Borrowing
 }
 
-export type BorrowServiceListing = {
-    minAmount: BigNumber;
-    maxAmount: BigNumber;
-    maxDuration: BigNumber;
-    interestRate: BigNumber;
-    loanToValue: BigNumber;
-    loanToValueTokenAddr: string;
-    currency: string;
-}
-
 export type ServiceListing = {
-    id: BigNumber;
-    minAmount: BigNumber;
-    maxAmount: BigNumber;
-    minDuration: BigNumber;
-    maxDuration: BigNumber;
-    interestRate: BigNumber;
-    loanToValue: BigNumber;
+    id: number;
+    minAmount: number;
+    maxAmount: number;
+    minDuration: number;
+    maxDuration: number;
+    interestRate: number;
+    loanToValue: number;
     loanToValueTokenAddr: string;
     currency: string;
     payBackOption: number;
     enabled: boolean;
-    name: string;
+    serviceProviderName: string;
+    listingName: string;
+    serviceType: ServiceType;
+    serviceContractAddress: string;
+    used: boolean;
+    balance: number;
 }

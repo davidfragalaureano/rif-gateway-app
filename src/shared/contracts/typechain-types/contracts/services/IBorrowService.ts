@@ -26,10 +26,18 @@ import type {
 export interface IBorrowServiceInterface extends utils.Interface {
   functions: {
     "borrow(uint256,address,uint256,uint256)": FunctionFragment;
+    "calculateRequiredCollateral(uint256,address)": FunctionFragment;
+    "getCollateralBalance()": FunctionFragment;
     "pay(uint256,address,uint256)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "borrow" | "pay"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "borrow"
+      | "calculateRequiredCollateral"
+      | "getCollateralBalance"
+      | "pay"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "borrow",
@@ -41,6 +49,14 @@ export interface IBorrowServiceInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "calculateRequiredCollateral",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCollateralBalance",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "pay",
     values: [
       PromiseOrValue<BigNumberish>,
@@ -50,6 +66,14 @@ export interface IBorrowServiceInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateRequiredCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCollateralBalance",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "pay", data: BytesLike): Result;
 
   events: {};
@@ -90,6 +114,14 @@ export interface IBorrowService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     pay(
       amount: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
@@ -106,6 +138,14 @@ export interface IBorrowService extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  calculateRequiredCollateral(
+    amount: PromiseOrValue<BigNumberish>,
+    currency: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
   pay(
     amount: PromiseOrValue<BigNumberish>,
     currency: PromiseOrValue<string>,
@@ -121,6 +161,14 @@ export interface IBorrowService extends BaseContract {
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     pay(
       amount: PromiseOrValue<BigNumberish>,
@@ -141,6 +189,14 @@ export interface IBorrowService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
     pay(
       amount: PromiseOrValue<BigNumberish>,
       currency: PromiseOrValue<string>,
@@ -156,6 +212,16 @@ export interface IBorrowService extends BaseContract {
       duration: PromiseOrValue<BigNumberish>,
       listingId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getCollateralBalance(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     pay(

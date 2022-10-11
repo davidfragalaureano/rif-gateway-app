@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-import { ServiceListing, RIFService, ServiceItemProps, ServiceTypes } from './types'
+import { ServiceListing, ServiceItemProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
 import {
-  getProviders,
+  getAllListings,
+  getBorrowService,
   getLendingService,
-  getUserIdentityFactory,
+  getProviders,
   getService,
-  LendingService,
-  BorrowService,
-  getTropykusBorrowService
+  getUserIdentityFactory
 } from '../shared/contracts'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 
 const SERVICE_KEY = 'SERVICES'
 const Row = withStyles({
@@ -29,8 +28,8 @@ const Row = withStyles({
 
 const mockActiveServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
 const Services = () => {
-  const [historicServices, setHistoricServices] = useState<RIFService[]>(mockActiveServices)
-  const [availableServices, setAvailableServices] = useState<RIFService[]>([])
+  const [historicServiceListings, setHistoricServiceListings] = useState<ServiceListing[]>(mockActiveServices)
+  const [availableServiceListings, setAvailableServiceListings] = useState<ServiceListing[]>([])
   const [signer, account] = useConnector(state => [state.signer, state.account], shallow)
 
   useEffect(() => {
@@ -41,22 +40,10 @@ const Services = () => {
       try {
         const servicesAddresses = await Providers.getServices()
         const services = servicesAddresses.map(address => getService(signer, address))
-        const servicesWithType = await Promise.all(services.map(async (service) => { return { serviceType: await service.serviceType(), service: service } }))
-        const borrowServices = servicesWithType.filter(({ serviceType }) => serviceType === ServiceTypes.Borrowing).map(({ service }) => getTropykusBorrowService(signer, service.address))
 
-        const listings = (await Promise.all(borrowServices.map(service => getListings(service)))).reduce((acc, val) => acc.concat(val), []) as ServiceListing[]
+        const listings = (await Promise.all(services.map(service => getAllListings(service)))).reduce((acc, val) => acc.concat(val), [])
 
-        const listingObjects = listings.map((listing, index) => ({
-          serviceProviderName: listing.name,
-          listingAddress: servicesAddresses[1], // TODO: to specify service provider address tropykusBorrow
-          listingName: 'Borrow Service',
-          balance: 0,
-          apy: +listing.interestRate / 1e18 * 100,
-          id: +listing.id,
-          used: false
-        }))
-
-        setAvailableServices([...availableServices, ...listingObjects])
+        setAvailableServiceListings([...availableServiceListings, ...listings])
       } catch (error) {
         console.log(error)
       }
@@ -64,9 +51,8 @@ const Services = () => {
     const fetchBalances = async () => {
       if (!signer || !account) return
 
-      const promises = historicServices.map(async (service: RIFService) => {
-        // const lendingService = getLendingService(signer, service.listingAddress)
-        const borrowingService = getTropykusBorrowService(signer, service.listingAddress)
+      const promises = historicServiceListings.map(async (service: ServiceListing) => {
+        const borrowingService = getService(signer, service.serviceContractAddress)
         const balance = await borrowingService.getBalance(ethers.constants.AddressZero)
         service.balance = +balance / 1e18
 
@@ -74,7 +60,7 @@ const Services = () => {
       })
 
       const updatedServices = await Promise.all(promises)
-      setHistoricServices(updatedServices)
+      setHistoricServiceListings(updatedServices)
     }
     fetchServices()
     fetchBalances()
@@ -92,7 +78,7 @@ const Services = () => {
   const withdrawService = async (serviceItem: ServiceItemProps) => {
     if (!signer || !account) return
 
-    const lendingService = getLendingService(signer, serviceItem.listingAddress)
+    const lendingService = getLendingService(signer, serviceItem.serviceContractAddress)
     await (await lendingService.withdraw()).wait()
 
     let updatedUsedServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
@@ -100,7 +86,7 @@ const Services = () => {
       if (service.id === serviceItem.id) service.used = true
       return service
     })
-    setHistoricServices(updatedUsedServices)
+    setHistoricServiceListings(updatedUsedServices)
     localStorage.setItem(SERVICE_KEY, JSON.stringify(updatedUsedServices))
   }
 
@@ -108,22 +94,20 @@ const Services = () => {
     if (!signer || !account) return
     const amounToBorrow = 100
 
-    const { id: consumedServiceId, listingAddress } = serviceItem
+    const { id: consumedServiceId, serviceContractAddress } = serviceItem
     const value = ethers.utils.parseEther(amounToBorrow.toString())
     console.log('value', +value / 1e18)
-    const borrowingService = getTropykusBorrowService(signer, listingAddress)
+    const borrowingService = getBorrowService(signer, serviceContractAddress)
     console.log('borrowingService', borrowingService)
     console.log('borrowingService', borrowingService.address)
 
     console.log('authorizing..')
-    await authorizeServiceProvider(listingAddress)
+    await authorizeServiceProvider(serviceContractAddress)
     console.log('authorize done..')
 
-    console.log('creating user identity...')
-    await (await borrowingService.connect(signer).createIdentity()).wait()
     const currency = process.env.REACT_APP_DOC_ADDRESS || ethers.constants.AddressZero
     console.log('currency', currency)
-    const amountToLend = await borrowingService.connect(signer).calculateAmountToLend(value)
+    const amountToLend = await borrowingService.connect(signer).calculateRequiredCollateral(value, currency)
     console.log('amountToLend', +amountToLend / 1e18)
     console.log('borrowing')
     await (await borrowingService.borrow(
@@ -142,8 +126,8 @@ const Services = () => {
     const servicesUpdated = [..._historicServices, serviceItem]
     localStorage.setItem(SERVICE_KEY, JSON.stringify(servicesUpdated))
 
-    setHistoricServices(servicesUpdated)
-    setAvailableServices(availableServices.filter(({ id }) => id !== consumedServiceId))
+    setHistoricServiceListings(servicesUpdated)
+    setAvailableServiceListings(availableServiceListings.filter(({ id }) => id !== consumedServiceId))
   }
 
   return (
@@ -153,15 +137,15 @@ const Services = () => {
           Service History
         </Typography>
       </Row>
-      {historicServices.map((service, index) => (
+      {historicServiceListings.map((service, index) => (
         <ServiceItem
           key={`active-service-item-row${index}`}
           serviceProviderName={service.serviceProviderName}
-          listingAddress={service.listingAddress}
+          serviceContractAddress={service.serviceContractAddress}
           listingName={service.listingName}
           available={false}
           balance={service.balance}
-          apy={service.apy}
+          interestRate={service.interestRate}
           id={service.id}
           used={service.used}
           onClickHandler={withdrawService}
@@ -173,17 +157,17 @@ const Services = () => {
           Available Services
         </Typography>
       </Row>
-      {availableServices.map((service, index) => (
+      {availableServiceListings.map((service, index) => (
         <ServiceItem
           key={`service-item-row${index}`}
           serviceProviderName={service.serviceProviderName}
-          listingAddress={service.listingAddress}
+          serviceContractAddress={service.serviceContractAddress}
           listingName={service.listingName}
-          available={true}
           balance={service.balance}
-          apy={service.apy}
+          interestRate={service.interestRate}
           id={service.id}
           used={service.used}
+          available={true}
           onClickHandler={consumeService}
         />
       ))}
@@ -193,7 +177,7 @@ const Services = () => {
 
 export default Services
 
-const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingName, listingAddress, available, balance, apy, id, used, onClickHandler }) => {
+const ServiceItem: React.FC<any> = ({ serviceProviderName, listingName, serviceContractAddress, available, balance, interestRate, id, used, onClickHandler }) => {
   return (
     <Row style={{ padding: '15px', background: 'white', borderRadius: '15px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
@@ -207,26 +191,17 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ serviceProviderName, listingN
           </Typography>
           : <div />}
         <Typography variant="body1" component="span">
-          APY: {apy}%
+          APY: {interestRate}%
         </Typography>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Button variant='contained' size='medium' className="float-right" disabled={!available && used}
-          onClick={() => { onClickHandler({ serviceProviderName, listingName, listingAddress, available, balance, apy, id }) }}>
+          onClick={() => { onClickHandler({ serviceProviderName, listingName, serviceContractAddress, available, balance, interestRate, id }) }}>
           {available ? 'Consume' : 'Withdraw'}
         </Button>
       </div>
 
     </Row>
   )
-}
-async function getListings (service: LendingService | BorrowService) {
-  const listingsCount = await service.getListingsCount()
-  const promises = []
-  for (let i = 0; i < +listingsCount; i++) {
-    promises.push(service.getListing(BigNumber.from(i)))
-  }
-  const listings = await Promise.all(promises)
-  return listings
 }

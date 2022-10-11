@@ -97,12 +97,11 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
     "addLiquidity(uint256,uint256)": FunctionFragment;
     "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "borrow(uint256,address,uint256,uint256)": FunctionFragment;
-    "calculateAmountToLend(uint256)": FunctionFragment;
-    "createIdentity()": FunctionFragment;
+    "calculateRequiredCollateral(uint256,address)": FunctionFragment;
     "currentLiquidity(uint256)": FunctionFragment;
     "disableListing(uint256)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
-    "getLendBalance()": FunctionFragment;
+    "getCollateralBalance()": FunctionFragment;
     "getListing(uint256)": FunctionFragment;
     "getListingsCount()": FunctionFragment;
     "listings(uint256)": FunctionFragment;
@@ -110,6 +109,7 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
     "pay(uint256,address,uint256)": FunctionFragment;
     "removeLiquidity(uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "serviceProviderName()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
@@ -126,12 +126,11 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
       | "addLiquidity"
       | "addListing"
       | "borrow"
-      | "calculateAmountToLend"
-      | "createIdentity"
+      | "calculateRequiredCollateral"
       | "currentLiquidity"
       | "disableListing"
       | "getBalance"
-      | "getLendBalance"
+      | "getCollateralBalance"
       | "getListing"
       | "getListingsCount"
       | "listings"
@@ -139,6 +138,7 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
       | "pay"
       | "removeLiquidity"
       | "renounceOwnership"
+      | "serviceProviderName"
       | "serviceType"
       | "transferOwnership"
       | "updateListing"
@@ -180,12 +180,8 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateAmountToLend",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "createIdentity",
-    values?: undefined
+    functionFragment: "calculateRequiredCollateral",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "currentLiquidity",
@@ -200,7 +196,7 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getLendBalance",
+    functionFragment: "getCollateralBalance",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -230,6 +226,10 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "serviceProviderName",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -270,11 +270,7 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "addListing", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "calculateAmountToLend",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "createIdentity",
+    functionFragment: "calculateRequiredCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -287,7 +283,7 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getLendBalance",
+    functionFragment: "getCollateralBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
@@ -304,6 +300,10 @@ export interface $TropykusBorrowingServiceInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "serviceProviderName",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -476,14 +476,11 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    calculateAmountToLend(
+    calculateRequiredCollateral(
       amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
-
-    createIdentity(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
 
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
@@ -500,7 +497,7 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getLendBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getCollateralBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -561,6 +558,8 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    serviceProviderName(overrides?: CallOverrides): Promise<[string]>;
+
     serviceType(overrides?: CallOverrides): Promise<[number]>;
 
     transferOwnership(
@@ -614,14 +613,11 @@ export interface $TropykusBorrowingService extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  calculateAmountToLend(
+  calculateRequiredCollateral(
     amount: PromiseOrValue<BigNumberish>,
+    currency: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
-
-  createIdentity(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   currentLiquidity(
     index: PromiseOrValue<BigNumberish>,
@@ -638,7 +634,7 @@ export interface $TropykusBorrowingService extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getLendBalance(overrides?: CallOverrides): Promise<BigNumber>;
+  getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getListing(
     listingId: PromiseOrValue<BigNumberish>,
@@ -699,6 +695,8 @@ export interface $TropykusBorrowingService extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  serviceProviderName(overrides?: CallOverrides): Promise<string>;
+
   serviceType(overrides?: CallOverrides): Promise<number>;
 
   transferOwnership(
@@ -752,12 +750,11 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    calculateAmountToLend(
+    calculateRequiredCollateral(
       amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    createIdentity(overrides?: CallOverrides): Promise<void>;
 
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
@@ -774,7 +771,7 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLendBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -832,6 +829,8 @@ export interface $TropykusBorrowingService extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    serviceProviderName(overrides?: CallOverrides): Promise<string>;
 
     serviceType(overrides?: CallOverrides): Promise<number>;
 
@@ -959,13 +958,10 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    calculateAmountToLend(
+    calculateRequiredCollateral(
       amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    createIdentity(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     currentLiquidity(
@@ -983,7 +979,7 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLendBalance(overrides?: CallOverrides): Promise<BigNumber>;
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -1015,6 +1011,8 @@ export interface $TropykusBorrowingService extends BaseContract {
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    serviceProviderName(overrides?: CallOverrides): Promise<BigNumber>;
 
     serviceType(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1070,13 +1068,10 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    calculateAmountToLend(
+    calculateRequiredCollateral(
       amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    createIdentity(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     currentLiquidity(
@@ -1094,7 +1089,9 @@ export interface $TropykusBorrowingService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getLendBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getCollateralBalance(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -1125,6 +1122,10 @@ export interface $TropykusBorrowingService extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    serviceProviderName(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     serviceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;

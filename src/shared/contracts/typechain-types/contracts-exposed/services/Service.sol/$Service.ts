@@ -84,6 +84,7 @@ export interface $ServiceInterface extends utils.Interface {
     "listings(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "serviceProviderName()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
@@ -103,6 +104,7 @@ export interface $ServiceInterface extends utils.Interface {
       | "listings"
       | "owner"
       | "renounceOwnership"
+      | "serviceProviderName"
       | "serviceType"
       | "transferOwnership"
       | "updateListing"
@@ -151,6 +153,10 @@ export interface $ServiceInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "serviceProviderName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "serviceType",
     values?: undefined
   ): string;
@@ -191,6 +197,10 @@ export interface $ServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "serviceProviderName",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -398,6 +408,8 @@ export interface $Service extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    serviceProviderName(overrides?: CallOverrides): Promise<[string]>;
+
     serviceType(overrides?: CallOverrides): Promise<[number]>;
 
     transferOwnership(
@@ -483,6 +495,8 @@ export interface $Service extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  serviceProviderName(overrides?: CallOverrides): Promise<string>;
+
   serviceType(overrides?: CallOverrides): Promise<number>;
 
   transferOwnership(
@@ -565,6 +579,8 @@ export interface $Service extends BaseContract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    serviceProviderName(overrides?: CallOverrides): Promise<string>;
 
     serviceType(overrides?: CallOverrides): Promise<number>;
 
@@ -698,6 +714,8 @@ export interface $Service extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    serviceProviderName(overrides?: CallOverrides): Promise<BigNumber>;
+
     serviceType(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
@@ -754,6 +772,10 @@ export interface $Service extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    serviceProviderName(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     serviceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;

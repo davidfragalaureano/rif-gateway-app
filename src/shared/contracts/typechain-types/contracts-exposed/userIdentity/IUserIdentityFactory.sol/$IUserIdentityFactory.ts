@@ -174,7 +174,7 @@ export interface $IUserIdentityFactory extends BaseContract {
     createIdentity(
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<string>;
 
     getIdentity(
       user: PromiseOrValue<string>,

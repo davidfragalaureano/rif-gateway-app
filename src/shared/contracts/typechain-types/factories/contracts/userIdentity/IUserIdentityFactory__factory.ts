@@ -37,7 +37,13 @@ const _abi = [
       },
     ],
     name: "createIdentity",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "contract UserIdentity",
+        name: "",
+        type: "address",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

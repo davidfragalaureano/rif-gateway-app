@@ -113,6 +113,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Service__factory>;
     getContractFactory(
+      name: "IComptrollerG6",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IComptrollerG6__factory>;
+    getContractFactory(
+      name: "IPriceOracleProxy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPriceOracleProxy__factory>;
+    getContractFactory(
       name: "TropykusBorrowingService",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TropykusBorrowingService__factory>;
@@ -266,6 +274,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Service>;
+    getContractAt(
+      name: "IComptrollerG6",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IComptrollerG6>;
+    getContractAt(
+      name: "IPriceOracleProxy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPriceOracleProxy>;
     getContractAt(
       name: "TropykusBorrowingService",
       address: string,

@@ -76,9 +76,11 @@ export interface BorrowServiceInterface extends utils.Interface {
     "addLiquidity(uint256,uint256)": FunctionFragment;
     "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "borrow(uint256,address,uint256,uint256)": FunctionFragment;
+    "calculateRequiredCollateral(uint256,address)": FunctionFragment;
     "currentLiquidity(uint256)": FunctionFragment;
     "disableListing(uint256)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
+    "getCollateralBalance()": FunctionFragment;
     "getListing(uint256)": FunctionFragment;
     "getListingsCount()": FunctionFragment;
     "listings(uint256)": FunctionFragment;
@@ -86,6 +88,7 @@ export interface BorrowServiceInterface extends utils.Interface {
     "pay(uint256,address,uint256)": FunctionFragment;
     "removeLiquidity(uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "serviceProviderName()": FunctionFragment;
     "serviceType()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
@@ -97,9 +100,11 @@ export interface BorrowServiceInterface extends utils.Interface {
       | "addLiquidity"
       | "addListing"
       | "borrow"
+      | "calculateRequiredCollateral"
       | "currentLiquidity"
       | "disableListing"
       | "getBalance"
+      | "getCollateralBalance"
       | "getListing"
       | "getListingsCount"
       | "listings"
@@ -107,6 +112,7 @@ export interface BorrowServiceInterface extends utils.Interface {
       | "pay"
       | "removeLiquidity"
       | "renounceOwnership"
+      | "serviceProviderName"
       | "serviceType"
       | "transferOwnership"
       | "updateListing"
@@ -131,6 +137,10 @@ export interface BorrowServiceInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "calculateRequiredCollateral",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "currentLiquidity",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -141,6 +151,10 @@ export interface BorrowServiceInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getBalance",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCollateralBalance",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getListing",
@@ -172,6 +186,10 @@ export interface BorrowServiceInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "serviceProviderName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "serviceType",
     values?: undefined
   ): string;
@@ -192,6 +210,10 @@ export interface BorrowServiceInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "addListing", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "calculateRequiredCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "currentLiquidity",
     data: BytesLike
   ): Result;
@@ -200,6 +222,10 @@ export interface BorrowServiceInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getCollateralBalance",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getListingsCount",
@@ -214,6 +240,10 @@ export interface BorrowServiceInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "serviceProviderName",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -369,6 +399,12 @@ export interface BorrowService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -383,6 +419,8 @@ export interface BorrowService extends BaseContract {
       currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -443,6 +481,8 @@ export interface BorrowService extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    serviceProviderName(overrides?: CallOverrides): Promise<[string]>;
+
     serviceType(overrides?: CallOverrides): Promise<[number]>;
 
     transferOwnership(
@@ -479,6 +519,12 @@ export interface BorrowService extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  calculateRequiredCollateral(
+    amount: PromiseOrValue<BigNumberish>,
+    currency: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   currentLiquidity(
     index: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -493,6 +539,8 @@ export interface BorrowService extends BaseContract {
     currency: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getListing(
     listingId: PromiseOrValue<BigNumberish>,
@@ -553,6 +601,8 @@ export interface BorrowService extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  serviceProviderName(overrides?: CallOverrides): Promise<string>;
+
   serviceType(overrides?: CallOverrides): Promise<number>;
 
   transferOwnership(
@@ -589,6 +639,12 @@ export interface BorrowService extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -603,6 +659,8 @@ export interface BorrowService extends BaseContract {
       currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -660,6 +718,8 @@ export interface BorrowService extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    serviceProviderName(overrides?: CallOverrides): Promise<string>;
 
     serviceType(overrides?: CallOverrides): Promise<number>;
 
@@ -770,6 +830,12 @@ export interface BorrowService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -784,6 +850,8 @@ export interface BorrowService extends BaseContract {
       currency: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getCollateralBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getListing(
       listingId: PromiseOrValue<BigNumberish>,
@@ -815,6 +883,8 @@ export interface BorrowService extends BaseContract {
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    serviceProviderName(overrides?: CallOverrides): Promise<BigNumber>;
 
     serviceType(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -853,6 +923,12 @@ export interface BorrowService extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    calculateRequiredCollateral(
+      amount: PromiseOrValue<BigNumberish>,
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     currentLiquidity(
       index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -865,6 +941,10 @@ export interface BorrowService extends BaseContract {
 
     getBalance(
       currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getCollateralBalance(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -897,6 +977,10 @@ export interface BorrowService extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    serviceProviderName(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     serviceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
