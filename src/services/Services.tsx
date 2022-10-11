@@ -100,10 +100,16 @@ const Services = () => {
   const consumeService = async (consumeServiceProps: ConsumeServiceProps) => {
     if (!signer || !account) return
 
+    let amountToBorrow
+
+    while (!amountToBorrow) {
+      amountToBorrow = +((prompt('Enter the amount of tokens you want to borrow', '0')) || '1'.trim())
+    }
+
     const {
       id: consumedServiceId,
-      serviceContractAddress,
-      amount: amountToBorrow
+      serviceContractAddress
+      // amount: amountToBorrow
     } = consumeServiceProps
 
     const value = ethers.utils.parseEther(amountToBorrow.toString())
