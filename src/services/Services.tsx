@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-import { ServiceListing, ServiceItemProps } from './types'
+import { ServiceListing, ServiceItemProps, ConsumeServiceProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
 import {
@@ -91,14 +91,15 @@ const Services = () => {
     localStorage.setItem(SERVICE_KEY, JSON.stringify(updatedUsedServices))
   }
 
-  const consumeService = async (serviceItem: ServiceItemProps) => {
+  const consumeService = async (consumeServiceProps: ConsumeServiceProps) => {
     if (!signer || !account) return
-    const amountToBorrow = 100
 
     const {
       id: consumedServiceId,
-      serviceContractAddress
-    } = serviceItem
+      serviceContractAddress,
+      amount: amountToBorrow
+    } = consumeServiceProps
+
     const value = ethers.utils.parseEther(amountToBorrow.toString())
     console.log('value', +value / 1e18)
     const borrowingService = getBorrowService(signer, serviceContractAddress)
@@ -117,17 +118,19 @@ const Services = () => {
     await (await borrowingService.borrow(
       value,
       currency,
-      serviceItem.id,
+      consumedServiceId,
       0,
       { value: amountToLend }
     )).wait()
 
     console.log('borrow done...')
     const balanceLent = await borrowingService.getBalance(ethers.constants.AddressZero)
-    serviceItem.balance = (+balanceLent / 1e18)
+    const newBalance = (+balanceLent / 1e18)
 
     const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
-    const servicesUpdated = [..._historicServices, serviceItem]
+
+    const serviceItem = availableServiceListings.find(service => service.id === consumedServiceId)
+    const servicesUpdated = [..._historicServices, { ...serviceItem, balance: newBalance }]
     localStorage.setItem(SERVICE_KEY, JSON.stringify(servicesUpdated))
 
     setHistoricServiceListings(servicesUpdated)
@@ -178,7 +181,7 @@ const Services = () => {
           id={service.id}
           used={service.used}
           available={true}
-          onClickHandler={consumeService}
+          onClickHandler={() => consumeService({ id: service.id, amount: 100, serviceContractAddress: service.serviceContractAddress })}
         />
       ))}
     </>

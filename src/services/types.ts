@@ -13,6 +13,12 @@ export type ServiceItemProps = ServiceListing & {
     onClickHandler: Function;
 }
 
+export type ConsumeServiceProps = {
+    id: number;
+    serviceContractAddress: string;
+    amount: number
+}
+
 export enum ServiceType {
     Lending,
     Borrowing
