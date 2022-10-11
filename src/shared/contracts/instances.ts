@@ -6,7 +6,7 @@ import UserIdentityFactoryABI from '../../shared/contracts/ABIs/UserIdentityFact
 import ServiceABI from '../../shared/contracts/ABIs/Service.json'
 import { Provider } from '@ethersproject/abstract-provider'
 import { BigNumber, Signer } from 'ethers'
-import { Providers, LendingService, BorrowService, Service, UserIdentityFactory, TropykusBorrowingService } from './typechain-types'
+import { Providers, LendingService, BorrowService, Service, UserIdentityFactory } from './typechain-types'
 import { ServiceListing, ServiceType } from '../../services/types'
 
 export function getProviders (signerOrProvider: Signer | Provider) {

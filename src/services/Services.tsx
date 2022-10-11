@@ -62,8 +62,9 @@ const Services = () => {
       const updatedServices = await Promise.all(promises)
       setHistoricServiceListings(updatedServices)
     }
-    fetchServices()
-    fetchBalances()
+    (async () => {
+      await Promise.all([fetchServices(), fetchBalances()])
+    })()
   }, [signer, account])
 
   const authorizeServiceProvider = async (serviceAddr: string) => {
@@ -92,10 +93,13 @@ const Services = () => {
 
   const consumeService = async (serviceItem: ServiceItemProps) => {
     if (!signer || !account) return
-    const amounToBorrow = 100
+    const amountToBorrow = 100
 
-    const { id: consumedServiceId, serviceContractAddress } = serviceItem
-    const value = ethers.utils.parseEther(amounToBorrow.toString())
+    const {
+      id: consumedServiceId,
+      serviceContractAddress
+    } = serviceItem
+    const value = ethers.utils.parseEther(amountToBorrow.toString())
     console.log('value', +value / 1e18)
     const borrowingService = getBorrowService(signer, serviceContractAddress)
     console.log('borrowingService', borrowingService)
@@ -133,7 +137,10 @@ const Services = () => {
   return (
     <>
       <Row>
-        <Typography style={{ fontWeight: 'bold', textAlign: 'left' }} variant="h2" component="h2">
+        <Typography style={{
+          fontWeight: 'bold',
+          textAlign: 'left'
+        }} variant="h2" component="h2">
           Service History
         </Typography>
       </Row>
@@ -153,7 +160,10 @@ const Services = () => {
       ))}
 
       <Row>
-        <Typography style={{ fontWeight: 'bold', textAlign: 'left' }} variant="h2" component="h2">
+        <Typography style={{
+          fontWeight: 'bold',
+          textAlign: 'left'
+        }} variant="h2" component="h2">
           Available Services
         </Typography>
       </Row>
@@ -177,27 +187,62 @@ const Services = () => {
 
 export default Services
 
-const ServiceItem: React.FC<any> = ({ serviceProviderName, listingName, serviceContractAddress, available, balance, interestRate, id, used, onClickHandler }) => {
+const ServiceItem: React.FC<any> = ({
+  serviceProviderName,
+  listingName,
+  serviceContractAddress,
+  available,
+  balance,
+  interestRate,
+  id,
+  used,
+  onClickHandler
+}) => {
   return (
-    <Row style={{ padding: '15px', background: 'white', borderRadius: '15px' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
+    <Row style={{
+      padding: '15px',
+      background: 'white',
+      borderRadius: '15px'
+    }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        color: 'black'
+      }}>
         <Typography style={{ color: 'black' }} variant="h3" component="span">{listingName}</Typography>
         <Typography style={{ color: 'black' }} variant="body1" component="span">{serviceProviderName}</Typography>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        color: 'black'
+      }}>
         {!available
           ? <Typography variant="body1" component="span">
             Balance: {balance} rBTC
           </Typography>
-          : <div />}
+          : <div/>}
         <Typography variant="body1" component="span">
           APY: {interestRate}%
         </Typography>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Button variant='contained' size='medium' className="float-right" disabled={!available && used}
-          onClick={() => { onClickHandler({ serviceProviderName, listingName, serviceContractAddress, available, balance, interestRate, id }) }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <Button variant="contained" size="medium" className="float-right" disabled={!available && used}
+                onClick={() => {
+                  onClickHandler({
+                    serviceProviderName,
+                    listingName,
+                    serviceContractAddress,
+                    available,
+                    balance,
+                    interestRate,
+                    id
+                  })
+                }}>
           {available ? 'Consume' : 'Withdraw'}
         </Button>
       </div>
