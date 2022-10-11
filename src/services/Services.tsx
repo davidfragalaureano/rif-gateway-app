@@ -109,7 +109,6 @@ const Services = () => {
     const {
       id: consumedServiceId,
       serviceContractAddress
-      // amount: amountToBorrow
     } = consumeServiceProps
 
     const value = ethers.utils.parseEther(amountToBorrow.toString())
@@ -198,7 +197,6 @@ const Services = () => {
           available={true}
           onClickHandler={() => consumeService({
             id: service.id,
-            amount: 100,
             serviceContractAddress: service.serviceContractAddress
           })}
         />
