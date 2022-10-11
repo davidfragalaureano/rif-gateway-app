@@ -14,8 +14,7 @@ export type ServiceItemProps = ServiceListing & {
 }
 
 export type ConsumeServiceProps = {
-  id: number;
-  serviceContractAddress: string;
+  serviceId: number;
 }
 
 export type WithdrawBalanceProps = {

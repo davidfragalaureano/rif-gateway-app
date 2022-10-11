@@ -107,9 +107,13 @@ const Services = () => {
     }
 
     const {
-      id: consumedServiceId,
-      serviceContractAddress
+      serviceId: consumedServiceId
     } = consumeServiceProps
+
+    const serviceItem = availableServiceListings.find(service => service.id === consumedServiceId)
+    if (!serviceItem) return
+
+    const { serviceContractAddress } = serviceItem
 
     const value = ethers.utils.parseEther(amountToBorrow.toString())
     console.log('value', +value / 1e18)
@@ -140,7 +144,6 @@ const Services = () => {
 
     const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
 
-    const serviceItem = availableServiceListings.find(service => service.id === consumedServiceId)
     const servicesUpdated = [..._historicServices, {
       ...serviceItem,
       balance: newBalance
@@ -196,8 +199,7 @@ const Services = () => {
           used={service.used}
           available={true}
           onClickHandler={() => consumeService({
-            id: service.id,
-            serviceContractAddress: service.serviceContractAddress
+            serviceId: service.id
           })}
         />
       ))}
