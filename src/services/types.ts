@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers'
-
 export type RIFService = {
     serviceProviderName: string,
     listingName: string,
