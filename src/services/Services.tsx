@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Typography } from '@mui/material'
 import { withStyles } from '@mui/styles'
-import { ServiceListing, ServiceItemProps, ConsumeServiceProps } from './types'
+import { ServiceListing, ServiceItemProps, ConsumeServiceProps, WithdrawBalanceProps } from './types'
 import shallow from 'zustand/shallow'
 import useConnector from '../connect/useConnector'
 import {
@@ -76,8 +76,13 @@ const Services = () => {
     await (await identityFactory.authorize(serviceAddr, true)).wait()
   }
 
-  const withdrawService = async (serviceItem: ServiceItemProps) => {
+  const withdrawService = async (withdrawBalanceProps: WithdrawBalanceProps) => {
     if (!signer || !account) return
+
+    const { serviceId } = withdrawBalanceProps
+
+    const serviceItem = historicServiceListings.find(service => service.id === serviceId)
+    if (!serviceItem) return
 
     const lendingService = getLendingService(signer, serviceItem.serviceContractAddress)
     await (await lendingService.withdraw()).wait()
@@ -87,6 +92,7 @@ const Services = () => {
       if (service.id === serviceItem.id) service.used = true
       return service
     })
+
     setHistoricServiceListings(updatedUsedServices)
     localStorage.setItem(SERVICE_KEY, JSON.stringify(updatedUsedServices))
   }
@@ -130,7 +136,10 @@ const Services = () => {
     const _historicServices = JSON.parse(localStorage.getItem(SERVICE_KEY) || '[]')
 
     const serviceItem = availableServiceListings.find(service => service.id === consumedServiceId)
-    const servicesUpdated = [..._historicServices, { ...serviceItem, balance: newBalance }]
+    const servicesUpdated = [..._historicServices, {
+      ...serviceItem,
+      balance: newBalance
+    }]
     localStorage.setItem(SERVICE_KEY, JSON.stringify(servicesUpdated))
 
     setHistoricServiceListings(servicesUpdated)
@@ -158,7 +167,7 @@ const Services = () => {
           interestRate={service.interestRate}
           id={service.id}
           used={service.used}
-          onClickHandler={withdrawService}
+          onClickHandler={() => withdrawService({ serviceId: service.id })}
         />
       ))}
 
@@ -181,7 +190,11 @@ const Services = () => {
           id={service.id}
           used={service.used}
           available={true}
-          onClickHandler={() => consumeService({ id: service.id, amount: 100, serviceContractAddress: service.serviceContractAddress })}
+          onClickHandler={() => consumeService({
+            id: service.id,
+            amount: 100,
+            serviceContractAddress: service.serviceContractAddress
+          })}
         />
       ))}
     </>
@@ -236,15 +249,7 @@ const ServiceItem: React.FC<any> = ({
       }}>
         <Button variant="contained" size="medium" className="float-right" disabled={!available && used}
                 onClick={() => {
-                  onClickHandler({
-                    serviceProviderName,
-                    listingName,
-                    serviceContractAddress,
-                    available,
-                    balance,
-                    interestRate,
-                    id
-                  })
+                  onClickHandler()
                 }}>
           {available ? 'Consume' : 'Withdraw'}
         </Button>

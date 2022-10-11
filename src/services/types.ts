@@ -19,6 +19,10 @@ export type ConsumeServiceProps = {
     amount: number
 }
 
+export type WithdrawBalanceProps = {
+    serviceId: number;
+}
+
 export enum ServiceType {
     Lending,
     Borrowing
