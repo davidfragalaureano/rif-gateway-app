@@ -72,24 +72,36 @@ export type ServiceListingStructOutput = [
 
 export interface $IServiceInterface extends utils.Interface {
   functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
     "disableListing(uint256)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
     "getListing(uint256)": FunctionFragment;
     "getListingsCount()": FunctionFragment;
+    "getServiceProviderName()": FunctionFragment;
+    "getServiceType()": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
     "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "__hh_exposed_bytecode_marker"
       | "addListing"
       | "disableListing"
       | "getBalance"
       | "getListing"
       | "getListingsCount"
+      | "getServiceProviderName"
+      | "getServiceType"
+      | "supportsInterface"
       | "updateListing"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "addListing",
     values: [ServiceListingStruct]
@@ -111,10 +123,26 @@ export interface $IServiceInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getServiceProviderName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getServiceType",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "updateListing",
     values: [ServiceListingStruct]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addListing", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "disableListing",
@@ -127,51 +155,30 @@ export interface $IServiceInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getServiceProviderName",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getServiceType",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateListing",
     data: BytesLike
   ): Result;
 
   events: {
-    "Borrow(uint256,address,address,uint256,uint256)": EventFragment;
-    "Lend(uint256,address,address,uint256)": EventFragment;
     "ListingCreated(address,uint256)": EventFragment;
-    "Pay(uint256,address,address,uint256)": EventFragment;
     "Withdraw(uint256,address,address,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Borrow"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Lend"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ListingCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Pay"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
-
-export interface BorrowEventObject {
-  listingId: BigNumber;
-  borrower: string;
-  currency: string;
-  amount: BigNumber;
-  duration: BigNumber;
-}
-export type BorrowEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber, BigNumber],
-  BorrowEventObject
->;
-
-export type BorrowEventFilter = TypedEventFilter<BorrowEvent>;
-
-export interface LendEventObject {
-  listingId: BigNumber;
-  lender: string;
-  currency: string;
-  amount: BigNumber;
-}
-export type LendEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
-  LendEventObject
->;
-
-export type LendEventFilter = TypedEventFilter<LendEvent>;
 
 export interface ListingCreatedEventObject {
   currency: string;
@@ -183,19 +190,6 @@ export type ListingCreatedEvent = TypedEvent<
 >;
 
 export type ListingCreatedEventFilter = TypedEventFilter<ListingCreatedEvent>;
-
-export interface PayEventObject {
-  listingId: BigNumber;
-  borrower: string;
-  currency: string;
-  amount: BigNumber;
-}
-export type PayEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
-  PayEventObject
->;
-
-export type PayEventFilter = TypedEventFilter<PayEvent>;
 
 export interface WithdrawEventObject {
   listingId: BigNumber;
@@ -237,6 +231,8 @@ export interface $IService extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     addListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -259,11 +255,22 @@ export interface $IService extends BaseContract {
 
     getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getServiceProviderName(overrides?: CallOverrides): Promise<[string]>;
+
+    getServiceType(overrides?: CallOverrides): Promise<[string]>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     updateListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   addListing(
     listing: ServiceListingStruct,
@@ -287,12 +294,23 @@ export interface $IService extends BaseContract {
 
   getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getServiceProviderName(overrides?: CallOverrides): Promise<string>;
+
+  getServiceType(overrides?: CallOverrides): Promise<string>;
+
+  supportsInterface(
+    interfaceId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   updateListing(
     listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
     addListing(
       listing: ServiceListingStruct,
       overrides?: CallOverrides
@@ -315,6 +333,15 @@ export interface $IService extends BaseContract {
 
     getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getServiceProviderName(overrides?: CallOverrides): Promise<string>;
+
+    getServiceType(overrides?: CallOverrides): Promise<string>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     updateListing(
       listing: ServiceListingStruct,
       overrides?: CallOverrides
@@ -322,34 +349,6 @@ export interface $IService extends BaseContract {
   };
 
   filters: {
-    "Borrow(uint256,address,address,uint256,uint256)"(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      borrower?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null,
-      duration?: null
-    ): BorrowEventFilter;
-    Borrow(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      borrower?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null,
-      duration?: null
-    ): BorrowEventFilter;
-
-    "Lend(uint256,address,address,uint256)"(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      lender?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null
-    ): LendEventFilter;
-    Lend(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      lender?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null
-    ): LendEventFilter;
-
     "ListingCreated(address,uint256)"(
       currency?: PromiseOrValue<string> | null,
       listingId?: PromiseOrValue<BigNumberish> | null
@@ -358,19 +357,6 @@ export interface $IService extends BaseContract {
       currency?: PromiseOrValue<string> | null,
       listingId?: PromiseOrValue<BigNumberish> | null
     ): ListingCreatedEventFilter;
-
-    "Pay(uint256,address,address,uint256)"(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      borrower?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PayEventFilter;
-    Pay(
-      listingId?: PromiseOrValue<BigNumberish> | null,
-      borrower?: PromiseOrValue<string> | null,
-      currency?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PayEventFilter;
 
     "Withdraw(uint256,address,address,uint256)"(
       listingId?: PromiseOrValue<BigNumberish> | null,
@@ -387,6 +373,8 @@ export interface $IService extends BaseContract {
   };
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     addListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -409,6 +397,15 @@ export interface $IService extends BaseContract {
 
     getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getServiceProviderName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getServiceType(overrides?: CallOverrides): Promise<BigNumber>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     updateListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -416,6 +413,10 @@ export interface $IService extends BaseContract {
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     addListing(
       listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -437,6 +438,17 @@ export interface $IService extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getListingsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getServiceProviderName(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getServiceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     updateListing(
       listing: ServiceListingStruct,

@@ -38,6 +38,7 @@ export interface $ERC677Interface extends utils.Interface {
     "$_msgSender()": FunctionFragment;
     "$_spendAllowance(address,address,uint256)": FunctionFragment;
     "$_transfer(address,address,uint256)": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -62,6 +63,7 @@ export interface $ERC677Interface extends utils.Interface {
       | "$_msgSender"
       | "$_spendAllowance"
       | "$_transfer"
+      | "__hh_exposed_bytecode_marker"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -129,6 +131,10 @@ export interface $ERC677Interface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "allowance",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -189,6 +195,10 @@ export interface $ERC677Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "$_transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -324,6 +334,8 @@ export interface $ERC677 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -426,6 +438,8 @@ export interface $ERC677 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
   allowance(
     owner: PromiseOrValue<string>,
     spender: PromiseOrValue<string>,
@@ -527,6 +541,8 @@ export interface $ERC677 extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -655,6 +671,8 @@ export interface $ERC677 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -756,6 +774,10 @@ export interface $ERC677 extends BaseContract {
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     allowance(

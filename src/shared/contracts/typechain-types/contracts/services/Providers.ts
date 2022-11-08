@@ -33,7 +33,6 @@ export interface ProvidersInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "validate(bool,address)": FunctionFragment;
   };
 
   getFunction(
@@ -43,7 +42,6 @@ export interface ProvidersInterface extends utils.Interface {
       | "owner"
       | "renounceOwnership"
       | "transferOwnership"
-      | "validate"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -63,10 +61,6 @@ export interface ProvidersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "validate",
-    values: [PromiseOrValue<boolean>, PromiseOrValue<string>]
-  ): string;
 
   decodeFunctionResult(functionFragment: "addService", data: BytesLike): Result;
   decodeFunctionResult(
@@ -82,7 +76,6 @@ export interface ProvidersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "validate", data: BytesLike): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
@@ -147,12 +140,6 @@ export interface Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
 
   addService(
@@ -173,12 +160,6 @@ export interface Providers extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  validate(
-    approved: PromiseOrValue<boolean>,
-    service: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
     addService(
       service: PromiseOrValue<string>,
@@ -193,12 +174,6 @@ export interface Providers extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -232,12 +207,6 @@ export interface Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -256,12 +225,6 @@ export interface Providers extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

@@ -22,16 +22,27 @@ import type {
 
 export interface $IComptrollerG6Interface extends utils.Interface {
   functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "markets(address)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "markets"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "__hh_exposed_bytecode_marker" | "markets"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "markets",
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "markets", data: BytesLike): Result;
 
   events: {};
@@ -64,11 +75,15 @@ export interface $IComptrollerG6 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     markets(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean, BigNumber]>;
   };
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   markets(
     cToken: PromiseOrValue<string>,
@@ -76,6 +91,8 @@ export interface $IComptrollerG6 extends BaseContract {
   ): Promise<[boolean, BigNumber]>;
 
   callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
     markets(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -85,6 +102,8 @@ export interface $IComptrollerG6 extends BaseContract {
   filters: {};
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     markets(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -92,6 +111,10 @@ export interface $IComptrollerG6 extends BaseContract {
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     markets(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides

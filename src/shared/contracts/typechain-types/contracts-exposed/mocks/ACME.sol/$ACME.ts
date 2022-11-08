@@ -40,6 +40,7 @@ export interface $ACMEInterface extends utils.Interface {
     "$_repay(address,uint256,address,address)": FunctionFragment;
     "$_transferOwnership(address)": FunctionFragment;
     "$_withdraw(uint256,address)": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "deposit()": FunctionFragment;
     "deposit(address)": FunctionFragment;
     "getBalance()": FunctionFragment;
@@ -71,6 +72,7 @@ export interface $ACMEInterface extends utils.Interface {
       | "$_repay"
       | "$_transferOwnership"
       | "$_withdraw"
+      | "__hh_exposed_bytecode_marker"
       | "deposit()"
       | "deposit(address)"
       | "getBalance()"
@@ -135,6 +137,10 @@ export interface $ACMEInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "$_withdraw",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "deposit()", values?: undefined): string;
   encodeFunctionData(
@@ -237,6 +243,10 @@ export interface $ACMEInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "$_withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "deposit()", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "deposit(address)",
@@ -459,6 +469,8 @@ export interface $ACME extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     "deposit()"(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -603,6 +615,8 @@ export interface $ACME extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
   "deposit()"(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -746,6 +760,8 @@ export interface $ACME extends BaseContract {
       withdrawer: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     "deposit()"(overrides?: CallOverrides): Promise<void>;
 
@@ -942,6 +958,8 @@ export interface $ACME extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     "deposit()"(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1079,6 +1097,10 @@ export interface $ACME extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       withdrawer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "deposit()"(

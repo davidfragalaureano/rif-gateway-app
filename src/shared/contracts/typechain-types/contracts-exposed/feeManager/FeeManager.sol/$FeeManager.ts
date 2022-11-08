@@ -31,6 +31,7 @@ import type {
 export interface $FeeManagerInterface extends utils.Interface {
   functions: {
     "$_beneficiares(address)": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "fundBeneficiary(address)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
@@ -39,6 +40,7 @@ export interface $FeeManagerInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "$_beneficiares"
+      | "__hh_exposed_bytecode_marker"
       | "fundBeneficiary"
       | "getBalance"
       | "withdraw"
@@ -47,6 +49,10 @@ export interface $FeeManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "$_beneficiares",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "fundBeneficiary",
@@ -63,6 +69,10 @@ export interface $FeeManagerInterface extends utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "$_beneficiares",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -132,6 +142,8 @@ export interface $FeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -153,6 +165,8 @@ export interface $FeeManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
   fundBeneficiary(
     beneficiary: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -173,6 +187,8 @@ export interface $FeeManager extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
@@ -216,6 +232,8 @@ export interface $FeeManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -235,6 +253,10 @@ export interface $FeeManager extends BaseContract {
   populateTransaction: {
     $_beneficiares(
       arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

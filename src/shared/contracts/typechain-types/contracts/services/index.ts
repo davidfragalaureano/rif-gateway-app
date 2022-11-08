@@ -8,3 +8,4 @@ export type { IService } from "./IService";
 export type { LendingService } from "./LendingService";
 export type { Providers } from "./Providers";
 export type { Service } from "./Service";
+export type { ServiceTypeManager } from "./ServiceTypeManager";

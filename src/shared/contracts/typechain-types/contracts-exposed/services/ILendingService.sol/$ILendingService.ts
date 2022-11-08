@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -13,7 +14,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -23,22 +28,233 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export interface $ILendingServiceInterface extends utils.Interface {
-  functions: {
-    "lend()": FunctionFragment;
-    "withdraw()": FunctionFragment;
+export type ServiceListingStruct = {
+  id: PromiseOrValue<BigNumberish>;
+  minAmount: PromiseOrValue<BigNumberish>;
+  maxAmount: PromiseOrValue<BigNumberish>;
+  minDuration: PromiseOrValue<BigNumberish>;
+  maxDuration: PromiseOrValue<BigNumberish>;
+  interestRate: PromiseOrValue<BigNumberish>;
+  loanToValue: PromiseOrValue<BigNumberish>;
+  loanToValueTokenAddr: PromiseOrValue<string>;
+  currency: PromiseOrValue<string>;
+  payBackOption: PromiseOrValue<BigNumberish>;
+  enabled: PromiseOrValue<boolean>;
+  name: PromiseOrValue<string>;
+};
+
+export type ServiceListingStructOutput = [
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  BigNumber,
+  string,
+  string,
+  number,
+  boolean,
+  string
+] & {
+  id: BigNumber;
+  minAmount: BigNumber;
+  maxAmount: BigNumber;
+  minDuration: BigNumber;
+  maxDuration: BigNumber;
+  interestRate: BigNumber;
+  loanToValue: BigNumber;
+  loanToValueTokenAddr: string;
+  currency: string;
+  payBackOption: number;
+  enabled: boolean;
+  name: string;
+};
+
+export declare namespace IForwarder {
+  export type ForwardRequestStruct = {
+    from: PromiseOrValue<string>;
+    nonce: PromiseOrValue<BigNumberish>;
+    executor: PromiseOrValue<string>;
   };
 
-  getFunction(nameOrSignatureOrTopic: "lend" | "withdraw"): FunctionFragment;
+  export type ForwardRequestStructOutput = [string, BigNumber, string] & {
+    from: string;
+    nonce: BigNumber;
+    executor: string;
+  };
+}
 
-  encodeFunctionData(functionFragment: "lend", values?: undefined): string;
-  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
+export interface $ILendingServiceInterface extends utils.Interface {
+  functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
+    "addListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
+    "disableListing(uint256)": FunctionFragment;
+    "getBalance(address)": FunctionFragment;
+    "getListing(uint256)": FunctionFragment;
+    "getListingsCount()": FunctionFragment;
+    "getServiceProviderName()": FunctionFragment;
+    "getServiceType()": FunctionFragment;
+    "lend(bytes32,(address,uint256,address),bytes)": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
+    "updateListing((uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address,uint8,bool,string))": FunctionFragment;
+    "withdraw(bytes32,(address,uint256,address),bytes)": FunctionFragment;
+  };
 
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "__hh_exposed_bytecode_marker"
+      | "addListing"
+      | "disableListing"
+      | "getBalance"
+      | "getListing"
+      | "getListingsCount"
+      | "getServiceProviderName"
+      | "getServiceType"
+      | "lend"
+      | "supportsInterface"
+      | "updateListing"
+      | "withdraw"
+  ): FunctionFragment;
+
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addListing",
+    values: [ServiceListingStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "disableListing",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBalance",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getListing",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getListingsCount",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getServiceProviderName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getServiceType",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lend",
+    values: [
+      PromiseOrValue<BytesLike>,
+      IForwarder.ForwardRequestStruct,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateListing",
+    values: [ServiceListingStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdraw",
+    values: [
+      PromiseOrValue<BytesLike>,
+      IForwarder.ForwardRequestStruct,
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "addListing", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "disableListing",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getBalance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getListing", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getListingsCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getServiceProviderName",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getServiceType",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "lend", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateListing",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "Lend(uint256,address,address,uint256)": EventFragment;
+    "ListingCreated(address,uint256)": EventFragment;
+    "Withdraw(uint256,address,address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Lend"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ListingCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
+
+export interface LendEventObject {
+  listingId: BigNumber;
+  lender: string;
+  currency: string;
+  amount: BigNumber;
+}
+export type LendEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber],
+  LendEventObject
+>;
+
+export type LendEventFilter = TypedEventFilter<LendEvent>;
+
+export interface ListingCreatedEventObject {
+  currency: string;
+  listingId: BigNumber;
+}
+export type ListingCreatedEvent = TypedEvent<
+  [string, BigNumber],
+  ListingCreatedEventObject
+>;
+
+export type ListingCreatedEventFilter = TypedEventFilter<ListingCreatedEvent>;
+
+export interface WithdrawEventObject {
+  listingId: BigNumber;
+  withdrawer: string;
+  currency: string;
+  amount: BigNumber;
+}
+export type WithdrawEvent = TypedEvent<
+  [BigNumber, string, string, BigNumber],
+  WithdrawEventObject
+>;
+
+export type WithdrawEventFilter = TypedEventFilter<WithdrawEvent>;
 
 export interface $ILendingService extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -67,48 +283,311 @@ export interface $ILendingService extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
+    addListing(
+      listing: ServiceListingStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[ServiceListingStructOutput]>;
+
+    getListingsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getServiceProviderName(overrides?: CallOverrides): Promise<[string]>;
+
+    getServiceType(overrides?: CallOverrides): Promise<[string]>;
+
     lend(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    withdraw(
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdraw(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  lend(
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
-  withdraw(
+  addListing(
+    listing: ServiceListingStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  callStatic: {
-    lend(overrides?: CallOverrides): Promise<void>;
+  disableListing(
+    listingId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-    withdraw(overrides?: CallOverrides): Promise<void>;
+  getBalance(
+    currency: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getListing(
+    listingId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<ServiceListingStructOutput>;
+
+  getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getServiceProviderName(overrides?: CallOverrides): Promise<string>;
+
+  getServiceType(overrides?: CallOverrides): Promise<string>;
+
+  lend(
+    suffixData: PromiseOrValue<BytesLike>,
+    req: IForwarder.ForwardRequestStruct,
+    sig: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  supportsInterface(
+    interfaceId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  updateListing(
+    listing: ServiceListingStruct,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdraw(
+    suffixData: PromiseOrValue<BytesLike>,
+    req: IForwarder.ForwardRequestStruct,
+    sig: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
+    addListing(
+      listing: ServiceListingStruct,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<ServiceListingStructOutput>;
+
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getServiceProviderName(overrides?: CallOverrides): Promise<string>;
+
+    getServiceType(overrides?: CallOverrides): Promise<string>;
+
+    lend(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    updateListing(
+      listing: ServiceListingStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdraw(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "Lend(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      lender?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): LendEventFilter;
+    Lend(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      lender?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): LendEventFilter;
+
+    "ListingCreated(address,uint256)"(
+      currency?: PromiseOrValue<string> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null
+    ): ListingCreatedEventFilter;
+    ListingCreated(
+      currency?: PromiseOrValue<string> | null,
+      listingId?: PromiseOrValue<BigNumberish> | null
+    ): ListingCreatedEventFilter;
+
+    "Withdraw(uint256,address,address,uint256)"(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      withdrawer?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): WithdrawEventFilter;
+    Withdraw(
+      listingId?: PromiseOrValue<BigNumberish> | null,
+      withdrawer?: PromiseOrValue<string> | null,
+      currency?: PromiseOrValue<string> | null,
+      amount?: null
+    ): WithdrawEventFilter;
+  };
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addListing(
+      listing: ServiceListingStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListingsCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getServiceProviderName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getServiceType(overrides?: CallOverrides): Promise<BigNumber>;
+
     lend(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    withdraw(
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdraw(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    addListing(
+      listing: ServiceListingStruct,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    disableListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getBalance(
+      currency: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getListing(
+      listingId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getListingsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getServiceProviderName(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getServiceType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     lend(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    withdraw(
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    updateListing(
+      listing: ServiceListingStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      suffixData: PromiseOrValue<BytesLike>,
+      req: IForwarder.ForwardRequestStruct,
+      sig: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

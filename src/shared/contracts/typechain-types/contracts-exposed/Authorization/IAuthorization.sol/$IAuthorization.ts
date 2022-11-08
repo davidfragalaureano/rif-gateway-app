@@ -24,6 +24,7 @@ import type {
 
 export interface $IAuthorizationInterface extends utils.Interface {
   functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "addOwner(address)": FunctionFragment;
     "addServiceProvider(address)": FunctionFragment;
     "addWalletProvider(address)": FunctionFragment;
@@ -34,6 +35,7 @@ export interface $IAuthorizationInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "__hh_exposed_bytecode_marker"
       | "addOwner"
       | "addServiceProvider"
       | "addWalletProvider"
@@ -42,6 +44,10 @@ export interface $IAuthorizationInterface extends utils.Interface {
       | "isWalletProvider"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "addOwner",
     values: [PromiseOrValue<string>]
@@ -67,6 +73,10 @@ export interface $IAuthorizationInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "addOwner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addServiceProvider",
@@ -116,6 +126,8 @@ export interface $IAuthorization extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -146,6 +158,8 @@ export interface $IAuthorization extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   addOwner(
     owner: PromiseOrValue<string>,
@@ -178,6 +192,8 @@ export interface $IAuthorization extends BaseContract {
   ): Promise<boolean>;
 
   callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -212,6 +228,8 @@ export interface $IAuthorization extends BaseContract {
   filters: {};
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -244,6 +262,10 @@ export interface $IAuthorization extends BaseContract {
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }

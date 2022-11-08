@@ -30,15 +30,24 @@ import type {
 
 export interface $IFeeManagerInterface extends utils.Interface {
   functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "fundBeneficiary(address)": FunctionFragment;
     "getBalance(address)": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "fundBeneficiary" | "getBalance" | "withdraw"
+    nameOrSignatureOrTopic:
+      | "__hh_exposed_bytecode_marker"
+      | "fundBeneficiary"
+      | "getBalance"
+      | "withdraw"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "fundBeneficiary",
     values: [PromiseOrValue<string>]
@@ -52,6 +61,10 @@ export interface $IFeeManagerInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "fundBeneficiary",
     data: BytesLike
@@ -114,6 +127,8 @@ export interface $IFeeManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -129,6 +144,8 @@ export interface $IFeeManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   fundBeneficiary(
     beneficiary: PromiseOrValue<string>,
@@ -146,6 +163,8 @@ export interface $IFeeManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -183,6 +202,8 @@ export interface $IFeeManager extends BaseContract {
   };
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -200,6 +221,10 @@ export interface $IFeeManager extends BaseContract {
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     fundBeneficiary(
       beneficiary: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }

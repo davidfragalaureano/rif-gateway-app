@@ -11,6 +11,19 @@ import type {
 
 const _abi = [
   {
+    inputs: [],
+    name: "__hh_exposed_bytecode_marker",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -28,6 +41,10 @@ const _abi = [
     ],
     stateMutability: "view",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];
 

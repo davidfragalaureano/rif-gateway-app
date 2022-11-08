@@ -5,6 +5,6 @@ export * as authorization from "./Authorization";
 export * as feeManager from "./feeManager";
 export * as mocks from "./mocks";
 export * as services from "./services";
+export * as smartwallet from "./smartwallet";
 export * as tropykus from "./tropykus";
-export * as userIdentity from "./userIdentity";
 export { RIFGateway__factory } from "./RIFGateway__factory";

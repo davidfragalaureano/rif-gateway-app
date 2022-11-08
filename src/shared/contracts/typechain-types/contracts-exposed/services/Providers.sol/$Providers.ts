@@ -29,40 +29,34 @@ import type {
 export interface $ProvidersInterface extends utils.Interface {
   functions: {
     "$_checkOwner()": FunctionFragment;
-    "$_isOnAddressArray(address[],address)": FunctionFragment;
     "$_msgData()": FunctionFragment;
     "$_msgSender()": FunctionFragment;
     "$_transferOwnership(address)": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "addService(address)": FunctionFragment;
     "getServices()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "validate(bool,address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "$_checkOwner"
-      | "$_isOnAddressArray"
       | "$_msgData"
       | "$_msgSender"
       | "$_transferOwnership"
+      | "__hh_exposed_bytecode_marker"
       | "addService"
       | "getServices"
       | "owner"
       | "renounceOwnership"
       | "transferOwnership"
-      | "validate"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "$_checkOwner",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "$_isOnAddressArray",
-    values: [PromiseOrValue<string>[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "$_msgData", values?: undefined): string;
   encodeFunctionData(
@@ -72,6 +66,10 @@ export interface $ProvidersInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "$_transferOwnership",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "addService",
@@ -90,17 +88,9 @@ export interface $ProvidersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "validate",
-    values: [PromiseOrValue<boolean>, PromiseOrValue<string>]
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "$_checkOwner",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "$_isOnAddressArray",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "$_msgData", data: BytesLike): Result;
@@ -110,6 +100,10 @@ export interface $ProvidersInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "$_transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addService", data: BytesLike): Result;
@@ -126,7 +120,6 @@ export interface $ProvidersInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "validate", data: BytesLike): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
@@ -176,12 +169,6 @@ export interface $Providers extends BaseContract {
   functions: {
     $_checkOwner(overrides?: CallOverrides): Promise<[void]>;
 
-    $_isOnAddressArray(
-      arr: PromiseOrValue<string>[],
-      add: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     $_msgData(overrides?: CallOverrides): Promise<[string]>;
 
     $_msgSender(overrides?: CallOverrides): Promise<[string]>;
@@ -190,6 +177,8 @@ export interface $Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
 
     addService(
       service: PromiseOrValue<string>,
@@ -208,21 +197,9 @@ export interface $Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
 
   $_checkOwner(overrides?: CallOverrides): Promise<void>;
-
-  $_isOnAddressArray(
-    arr: PromiseOrValue<string>[],
-    add: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   $_msgData(overrides?: CallOverrides): Promise<string>;
 
@@ -232,6 +209,8 @@ export interface $Providers extends BaseContract {
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   addService(
     service: PromiseOrValue<string>,
@@ -251,20 +230,8 @@ export interface $Providers extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  validate(
-    approved: PromiseOrValue<boolean>,
-    service: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
     $_checkOwner(overrides?: CallOverrides): Promise<void>;
-
-    $_isOnAddressArray(
-      arr: PromiseOrValue<string>[],
-      add: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     $_msgData(overrides?: CallOverrides): Promise<string>;
 
@@ -274,6 +241,8 @@ export interface $Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     addService(
       service: PromiseOrValue<string>,
@@ -288,12 +257,6 @@ export interface $Providers extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -312,12 +275,6 @@ export interface $Providers extends BaseContract {
   estimateGas: {
     $_checkOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    $_isOnAddressArray(
-      arr: PromiseOrValue<string>[],
-      add: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     $_msgData(overrides?: CallOverrides): Promise<BigNumber>;
 
     $_msgSender(overrides?: CallOverrides): Promise<BigNumber>;
@@ -326,6 +283,8 @@ export interface $Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
 
     addService(
       service: PromiseOrValue<string>,
@@ -344,22 +303,10 @@ export interface $Providers extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     $_checkOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    $_isOnAddressArray(
-      arr: PromiseOrValue<string>[],
-      add: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     $_msgData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -368,6 +315,10 @@ export interface $Providers extends BaseContract {
     $_transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     addService(
@@ -385,12 +336,6 @@ export interface $Providers extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    validate(
-      approved: PromiseOrValue<boolean>,
-      service: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

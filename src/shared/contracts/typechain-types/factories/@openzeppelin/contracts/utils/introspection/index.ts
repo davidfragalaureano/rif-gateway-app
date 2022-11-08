@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ERC165__factory } from "./ERC165__factory";
+export { ERC165Storage__factory } from "./ERC165Storage__factory";
 export { IERC165__factory } from "./IERC165__factory";

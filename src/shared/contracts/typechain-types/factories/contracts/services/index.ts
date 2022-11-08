@@ -8,3 +8,4 @@ export { IService__factory } from "./IService__factory";
 export { LendingService__factory } from "./LendingService__factory";
 export { Providers__factory } from "./Providers__factory";
 export { Service__factory } from "./Service__factory";
+export { ServiceTypeManager__factory } from "./ServiceTypeManager__factory";

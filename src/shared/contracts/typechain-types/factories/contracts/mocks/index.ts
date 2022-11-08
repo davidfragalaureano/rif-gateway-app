@@ -2,7 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ACME__factory } from "./ACME__factory";
-export { DummyBorrowService__factory } from "./DummyBorrowService__factory";
-export { DummyLendingService__factory } from "./DummyLendingService__factory";
 export { ERC677__factory } from "./ERC677__factory";
-export { IdentityLendingService__factory } from "./IdentityLendingService__factory";

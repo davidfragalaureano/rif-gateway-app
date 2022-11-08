@@ -37,6 +37,7 @@ export interface $AuthorizationInterface extends utils.Interface {
     "$_setRoleAdmin(bytes32,bytes32)": FunctionFragment;
     "$_setupRole(bytes32,address)": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "addOwner(address)": FunctionFragment;
     "addServiceProvider(address)": FunctionFragment;
     "addWalletProvider(address)": FunctionFragment;
@@ -62,6 +63,7 @@ export interface $AuthorizationInterface extends utils.Interface {
       | "$_setRoleAdmin"
       | "$_setupRole"
       | "DEFAULT_ADMIN_ROLE"
+      | "__hh_exposed_bytecode_marker"
       | "addOwner"
       | "addServiceProvider"
       | "addWalletProvider"
@@ -107,6 +109,10 @@ export interface $AuthorizationInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -189,6 +195,10 @@ export interface $AuthorizationInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addOwner", data: BytesLike): Result;
@@ -341,6 +351,8 @@ export interface $Authorization extends BaseContract {
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -447,6 +459,8 @@ export interface $Authorization extends BaseContract {
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
   addOwner(
     owner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -552,6 +566,8 @@ export interface $Authorization extends BaseContract {
     ): Promise<void>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     addOwner(
       owner: PromiseOrValue<string>,
@@ -695,6 +711,8 @@ export interface $Authorization extends BaseContract {
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     addOwner(
       owner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -801,6 +819,10 @@ export interface $Authorization extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     DEFAULT_ADMIN_ROLE(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

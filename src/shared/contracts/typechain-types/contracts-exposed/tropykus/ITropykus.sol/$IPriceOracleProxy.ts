@@ -22,16 +22,29 @@ import type {
 
 export interface $IPriceOracleProxyInterface extends utils.Interface {
   functions: {
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "getUnderlyingPrice(address)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "getUnderlyingPrice"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "__hh_exposed_bytecode_marker"
+      | "getUnderlyingPrice"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "getUnderlyingPrice",
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getUnderlyingPrice",
     data: BytesLike
@@ -67,11 +80,15 @@ export interface $IPriceOracleProxy extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     getUnderlyingPrice(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
   };
+
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
   getUnderlyingPrice(
     cToken: PromiseOrValue<string>,
@@ -79,6 +96,8 @@ export interface $IPriceOracleProxy extends BaseContract {
   ): Promise<BigNumber>;
 
   callStatic: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
     getUnderlyingPrice(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -88,6 +107,8 @@ export interface $IPriceOracleProxy extends BaseContract {
   filters: {};
 
   estimateGas: {
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     getUnderlyingPrice(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -95,6 +116,10 @@ export interface $IPriceOracleProxy extends BaseContract {
   };
 
   populateTransaction: {
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getUnderlyingPrice(
       cToken: PromiseOrValue<string>,
       overrides?: CallOverrides

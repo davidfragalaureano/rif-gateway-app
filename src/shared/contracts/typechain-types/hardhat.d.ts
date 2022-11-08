@@ -41,6 +41,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC165__factory>;
     getContractFactory(
+      name: "ERC165Storage",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC165Storage__factory>;
+    getContractFactory(
       name: "IERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
@@ -65,21 +69,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ACME__factory>;
     getContractFactory(
-      name: "DummyBorrowService",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DummyBorrowService__factory>;
-    getContractFactory(
-      name: "DummyLendingService",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DummyLendingService__factory>;
-    getContractFactory(
       name: "ERC677",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC677__factory>;
-    getContractFactory(
-      name: "IdentityLendingService",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IdentityLendingService__factory>;
     getContractFactory(
       name: "RIFGateway",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -113,6 +105,26 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Service__factory>;
     getContractFactory(
+      name: "ServiceTypeManager",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ServiceTypeManager__factory>;
+    getContractFactory(
+      name: "IForwarder",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IForwarder__factory>;
+    getContractFactory(
+      name: "ISmartWalletFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ISmartWalletFactory__factory>;
+    getContractFactory(
+      name: "SmartWallet",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SmartWallet__factory>;
+    getContractFactory(
+      name: "SmartWalletFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.SmartWalletFactory__factory>;
+    getContractFactory(
       name: "IComptrollerG6",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IComptrollerG6__factory>;
@@ -128,26 +140,6 @@ declare module "hardhat/types/runtime" {
       name: "TropykusLendingService",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TropykusLendingService__factory>;
-    getContractFactory(
-      name: "IUserIdentityACL",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUserIdentityACL__factory>;
-    getContractFactory(
-      name: "IUserIdentityFactory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUserIdentityFactory__factory>;
-    getContractFactory(
-      name: "UserIdentity",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.UserIdentity__factory>;
-    getContractFactory(
-      name: "UserIdentityACL",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.UserIdentityACL__factory>;
-    getContractFactory(
-      name: "UserIdentityFactory",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.UserIdentityFactory__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -185,6 +177,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC165>;
     getContractAt(
+      name: "ERC165Storage",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC165Storage>;
+    getContractAt(
       name: "IERC165",
       address: string,
       signer?: ethers.Signer
@@ -215,25 +212,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ACME>;
     getContractAt(
-      name: "DummyBorrowService",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DummyBorrowService>;
-    getContractAt(
-      name: "DummyLendingService",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DummyLendingService>;
-    getContractAt(
       name: "ERC677",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ERC677>;
-    getContractAt(
-      name: "IdentityLendingService",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IdentityLendingService>;
     getContractAt(
       name: "RIFGateway",
       address: string,
@@ -275,6 +257,31 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Service>;
     getContractAt(
+      name: "ServiceTypeManager",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ServiceTypeManager>;
+    getContractAt(
+      name: "IForwarder",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IForwarder>;
+    getContractAt(
+      name: "ISmartWalletFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ISmartWalletFactory>;
+    getContractAt(
+      name: "SmartWallet",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SmartWallet>;
+    getContractAt(
+      name: "SmartWalletFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.SmartWalletFactory>;
+    getContractAt(
       name: "IComptrollerG6",
       address: string,
       signer?: ethers.Signer
@@ -294,31 +301,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.TropykusLendingService>;
-    getContractAt(
-      name: "IUserIdentityACL",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUserIdentityACL>;
-    getContractAt(
-      name: "IUserIdentityFactory",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUserIdentityFactory>;
-    getContractAt(
-      name: "UserIdentity",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.UserIdentity>;
-    getContractAt(
-      name: "UserIdentityACL",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.UserIdentityACL>;
-    getContractAt(
-      name: "UserIdentityFactory",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.UserIdentityFactory>;
 
     // default types
     getContractFactory(

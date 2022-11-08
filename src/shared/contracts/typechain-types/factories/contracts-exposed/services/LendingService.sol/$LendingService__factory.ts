@@ -13,6 +13,17 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "FailedOperation",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "amount",
         type: "uint256",
@@ -20,43 +31,6 @@ const _abi = [
     ],
     name: "InvalidAmount",
     type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "listingId",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "borrower",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "currency",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "duration",
-        type: "uint256",
-      },
-    ],
-    name: "Borrow",
-    type: "event",
   },
   {
     anonymous: false,
@@ -139,37 +113,6 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "borrower",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "currency",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "Pay",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "listingId",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
         name: "withdrawer",
         type: "address",
       },
@@ -233,6 +176,19 @@ const _abi = [
     name: "$_transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "__hh_exposed_bytecode_marker",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -444,6 +400,78 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getServiceProviderName",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getServiceType",
+    outputs: [
+      {
+        internalType: "bytes4",
+        name: "",
+        type: "bytes4",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getThisAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "suffixData",
+        type: "bytes32",
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "nonce",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "executor",
+            type: "address",
+          },
+        ],
+        internalType: "struct IForwarder.ForwardRequest",
+        name: "req",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "sig",
+        type: "bytes",
+      },
+    ],
     name: "lend",
     outputs: [],
     stateMutability: "payable",
@@ -561,9 +589,28 @@ const _abi = [
     name: "serviceType",
     outputs: [
       {
-        internalType: "enum ServiceType",
+        internalType: "bytes4",
         name: "",
-        type: "uint8",
+        type: "bytes4",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -658,11 +705,48 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "suffixData",
+        type: "bytes32",
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "nonce",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "executor",
+            type: "address",
+          },
+        ],
+        internalType: "struct IForwarder.ForwardRequest",
+        name: "req",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "sig",
+        type: "bytes",
+      },
+    ],
     name: "withdraw",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];
 

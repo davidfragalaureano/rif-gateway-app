@@ -23,15 +23,26 @@ import type {
 export interface $RIFGatewayInterface extends utils.Interface {
   functions: {
     "$_bar()": FunctionFragment;
+    "__hh_exposed_bytecode_marker()": FunctionFragment;
     "foo()": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "$_bar" | "foo"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "$_bar" | "__hh_exposed_bytecode_marker" | "foo"
+  ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "$_bar", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "foo", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "$_bar", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "__hh_exposed_bytecode_marker",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "foo", data: BytesLike): Result;
 
   events: {};
@@ -66,15 +77,21 @@ export interface $RIFGateway extends BaseContract {
   functions: {
     $_bar(overrides?: CallOverrides): Promise<[string]>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<[string]>;
+
     foo(overrides?: CallOverrides): Promise<[string]>;
   };
 
   $_bar(overrides?: CallOverrides): Promise<string>;
 
+  __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
+
   foo(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     $_bar(overrides?: CallOverrides): Promise<string>;
+
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<string>;
 
     foo(overrides?: CallOverrides): Promise<string>;
   };
@@ -84,11 +101,17 @@ export interface $RIFGateway extends BaseContract {
   estimateGas: {
     $_bar(overrides?: CallOverrides): Promise<BigNumber>;
 
+    __hh_exposed_bytecode_marker(overrides?: CallOverrides): Promise<BigNumber>;
+
     foo(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     $_bar(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    __hh_exposed_bytecode_marker(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     foo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

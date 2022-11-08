@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ERC165 } from "./ERC165";
+export type { ERC165Storage } from "./ERC165Storage";
 export type { IERC165 } from "./IERC165";

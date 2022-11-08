@@ -2,7 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ACME } from "./ACME";
-export type { DummyBorrowService } from "./DummyBorrowService";
-export type { DummyLendingService } from "./DummyLendingService";
 export type { ERC677 } from "./ERC677";
-export type { IdentityLendingService } from "./IdentityLendingService";
